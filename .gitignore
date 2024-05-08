@@ -9,7 +9,7 @@
 
 ### Git ###
 # Created by git for backups. To disable backups in Git:
-# $ git config --global mergetool.keepBackup false
+# $ git config --global merge tool.keepBackup false
 *.orig
 
 # Created by git when using merge tools for conflicts
@@ -86,3 +86,7 @@ __pycache__
 .ipynb_checkpoints
 venv/
 .pytest_cache
+
+.terraform
+
+.venv

@@ -27,11 +27,10 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
 
-      - name: Set up Python 3.8
+      - name: Set up Python 3.11
         uses: actions/setup-python@v1
         with:
-          python-version: 3.8
-          cache: 'pip'
+          python-version: '3.11'
 
       - name: Install dependencies
         run: |
@@ -61,7 +60,7 @@ jobs:
           CODE_QUALITY: ${{ env.SCORE }}
           BADGE_PATH: .github/badges/code_quality.svg
           BRANCH: main
-      
+
       - name: Obtain total_errors from JSON
         id: total_errors
         run: |
@@ -88,7 +87,7 @@ jobs:
           color: 'blue'
           path: .github/badges/code_quality.svg
           scale: 1.5
-      
+
       - name: Generate the badge SVG image
         uses: emibcn/badge-action@v1
         id: error_badge
@@ -116,10 +115,10 @@ jobs:
       - name: Committing logs and badge to the repository
         if: github.repository != 'sigma-labs-xyz/coursework-template'
         run: |
-          git config --global user.name "$(git log -n 1 --pretty=format:%an)"
-          git config --global user.email "$(git log -n 1 --pretty=format:%ae)"
+          git config --global user.name "SigmaBot"
+          git config --global user.email "coaches@sigmalabs.co.uk"
           git pull
           git add code_review/report.txt code_review/report.json .github/badges/code_quality.svg .github/badges/total_errors.svg
           git checkout main
-          git diff-index --quiet HEAD || git commit -am "deploy workflow logs"
+          git diff-index --quiet HEAD || git commit -am "SigmaBot: Update Code Quality Scores"
           git push

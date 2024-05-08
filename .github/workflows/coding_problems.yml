@@ -1,0 +1,56 @@
+name: Daily Coding Problems
+
+permissions:
+  actions: write
+  checks: write
+  contents: write
+  deployments: write
+  issues: write
+  packages: write
+  pull-requests: write
+  repository-projects: write
+  security-events: write
+  statuses: write
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'coding_problems/**.py'
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest
+          pip install pytest-json-report
+
+      - name: Run the unit tests with pytest
+        run: |
+          cd coding_problems
+          pytest --json-report --json-report-summary --json-report-file=coding-problems-report.json --json-report-indent=4 || echo "ignore exit code 1"
+
+      - name: Committing pytest JSON logs
+        if: github.repository != 'sigma-labs-xyz/coursework-template'
+        run: |
+          git config --global user.name "SigmaBot"
+          git config --global user.email "coaches@sigmalabs.co.uk"
+          git pull
+          git add coding_problems/coding-problems-report.json
+          git checkout main
+          git diff-index --quiet HEAD || git commit -am "SigmaBot: Update Coding Problem Scores"
+          git push

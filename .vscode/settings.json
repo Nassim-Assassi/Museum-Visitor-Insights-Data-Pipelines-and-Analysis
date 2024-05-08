@@ -100,10 +100,8 @@
     "Weasley",
     "websockets"
   ],
-  "deno.enable": true,
   "files.autoSave": "onFocusChange",
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
-  "editor.formatOnSaveMode": "file",
-  "editor.defaultFormatter": "esbenp.prettier-vscode"
+  "editor.formatOnSaveMode": "file"
 }

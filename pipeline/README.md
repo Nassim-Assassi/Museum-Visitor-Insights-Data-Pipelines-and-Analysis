@@ -1,3 +1,3 @@
 # Pipeline
 
-This folder should be used to store final files and code for your **complete**, end-to-end ETL pipeline.
+This folder should contain all code, documentation and resources required for the pipeline.

@@ -133,10 +133,10 @@ jobs:
       - name: Committing logs and badge to the repository
         if: github.repository != 'sigma-labs-xyz/coursework-template'
         run: |
-          git config --global user.name "$(git log -n 1 --pretty=format:%an)"
-          git config --global user.email "$(git log -n 1 --pretty=format:%ae)"
+          git config --global user.name "SigmaBot"
+          git config --global user.email "coaches@sigmalabs.co.uk"
           git pull
           git add code_review/report.txt code_review/report.json .github/badges/code_quality.svg .github/badges/total_errors.svg
           git checkout main
-          git diff-index --quiet HEAD || git commit -am "deploy workflow logs"
+          git diff-index --quiet HEAD || git commit -am "Update Code Quality"
           git push
