@@ -99,14 +99,14 @@ jobs:
           scale: 1.5
 
       - name: Upload badge as artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: badge
           path: .github/badges/code_quality.svg
           if-no-files-found: ignore
 
       - name: Upload badge as artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: badge
           path: .github/badges/total_errors.svg
