@@ -99,7 +99,7 @@ jobs:
           scale: 1.5
 
       - name: Upload badge as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: badge
           path: .github/badges/code_quality.svg
