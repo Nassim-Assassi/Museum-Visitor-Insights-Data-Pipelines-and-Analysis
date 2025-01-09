@@ -27,10 +27,10 @@ jobs:
       - name: checkout
         uses: actions/checkout@v3
 
-      - name: Set up Python 3.11
+      - name: Set up Python 3.12
         uses: actions/setup-python@v1
         with:
-          python-version: '3.11'
+          python-version: '3.12'
 
       - name: Install dependencies
         run: |
@@ -106,11 +106,12 @@ jobs:
           if-no-files-found: ignore
 
       - name: Upload badge as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: badge
           path: .github/badges/total_errors.svg
           if-no-files-found: ignore
+          overwrite: true
 
       - name: Committing logs and badge to the repository
         if: github.repository != 'sigma-labs-xyz/coursework-template'
