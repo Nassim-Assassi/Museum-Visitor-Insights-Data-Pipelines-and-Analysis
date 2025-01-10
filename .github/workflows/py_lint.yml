@@ -104,6 +104,7 @@ jobs:
           name: badge
           path: .github/badges/code_quality.svg
           if-no-files-found: ignore
+          overwrite: true
 
       - name: Upload badge as artifact
         uses: actions/upload-artifact@v4
