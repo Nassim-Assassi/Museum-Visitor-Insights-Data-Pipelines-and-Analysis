@@ -98,7 +98,7 @@ jobs:
           path: .github/badges/total_errors.svg
           scale: 1.5
 
-      - name: Upload badge as artifact
+      - name: Upload code quality badge as artifact
         uses: actions/upload-artifact@v4
         with:
           name: badge
@@ -106,7 +106,7 @@ jobs:
           if-no-files-found: ignore
           overwrite: true
 
-      - name: Upload badge as artifact
+      - name: Upload errors badge as artifact
         uses: actions/upload-artifact@v4
         with:
           name: badge
