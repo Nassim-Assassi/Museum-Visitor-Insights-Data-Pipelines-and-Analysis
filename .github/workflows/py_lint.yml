@@ -101,7 +101,7 @@ jobs:
       - name: Upload code quality badge as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: badge
+          name: quality_badge
           path: .github/badges/code_quality.svg
           if-no-files-found: ignore
           overwrite: true
@@ -109,7 +109,7 @@ jobs:
       - name: Upload errors badge as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: badge
+          name: errors_badge
           path: .github/badges/total_errors.svg
           if-no-files-found: ignore
           overwrite: true
