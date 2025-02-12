@@ -91,3 +91,6 @@ venv/
 .terraform
 
 .venv
+
+*.pem
+*.pemkey
