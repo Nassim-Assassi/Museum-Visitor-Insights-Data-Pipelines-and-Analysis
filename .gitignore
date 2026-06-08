@@ -95,3 +95,6 @@ venv/
 
 *.pem
 *.pemkey
+
+*.csv
+*.json
