@@ -2,3 +2,6 @@ boto3
 python-dotenv
 pytest
 pylint
+pandas
+psycopg2-binary
+sqlalchemy

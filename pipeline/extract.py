@@ -1,12 +1,15 @@
 import os
 
+from os import environ, _Environ, remove
+
+import json
+
 from boto3 import client
 
 from dotenv import load_dotenv
 
-from os import environ, _Environ
 
-# import pandas as pd
+import pandas as pd
 
 
 def get_s3_client(config: _Environ) -> client:
@@ -47,7 +50,7 @@ def extract_object_from_S3_bucket(bucket_name: str, file_name: str, s3_client: c
     s3_client.download_file(bucket_name, file_name, f"{save_dir}/{file_name}")
 
 
-def extract_objects_from_S3_bucket(bucket_name: str, file_names: str, s3_client: client, save_dir: str = ".") -> None:
+def extract_objects_from_S3_bucket(bucket_name: str, file_names: list[str], s3_client: client, save_dir: str = ".") -> None:
     """Extracts objects from an S3 bucket and saves them to local files."""
     for file_name in file_names:
         extract_object_from_S3_bucket(
@@ -75,15 +78,7 @@ def download_historical_data(s3_client: client) -> None:
         "sigma-resources-museum", historical_object_names, s3_client)
 
 
-# def combine_csv_files_pandas(file_names: list, output_file_name: str) -> None:
-#     """Combines multiple CSV files into a single CSV file."""
-
-#     combined_df = pd.concat([pd.read_csv(file_name)
-#                             for file_name in file_names])
-#     combined_df.to_csv(output_file_name, index=False)
-
-
-def combine_csv_files(file_names: list, output_file_name: str) -> None:
+def combine_csv_files(file_names: list[str], output_file_name: str) -> None:
     """Combines multiple CSV files into a single CSV file."""
     with open(output_file_name, "w") as output_file:
         for i, file_name in enumerate(file_names):
@@ -94,22 +89,54 @@ def combine_csv_files(file_names: list, output_file_name: str) -> None:
                 output_file.write(input_file.read())
 
 
-def delete_local_files(file_names: list) -> None:
+def delete_local_files(file_names: list[str]) -> None:
     """Deletes local files."""
     for file_name in file_names:
         os.remove(file_name)
 
 
-if __name__ == "__main__":
-    s3_client = get_s3_client(environ)
+def json_files_to_list(file_names: list[str]) -> list[dict]:
+    """Reads JSON files and returns their contents as a list of dictionaries."""
+    data = []
+    for file_name in file_names:
+        with open(file_name, "r") as f:
+            data.append(json.load(f))
+    return data
 
-    download_exhibition_data(s3_client)
+
+def convert_list_of_dicts_to_csv(data: list[dict], output_file_name: str) -> None:
+    """Converts a list of dictionaries to a CSV file."""
+    df = pd.DataFrame(data)
+    df.to_csv(output_file_name, index=False)
+
+
+def download_and_format_data_from_s3_bucket(s3_client: client) -> None:
+    """
+    Extracts all relevant data from an S3 bucket and saves it to local files.
+    Combines the historical data into a single CSV file and converts the exhibition data from JSON to CSV format.
+    """
     download_historical_data(s3_client)
 
     historical_file_names = extract_s3_bucket_object_names(
         "sigma-resources-museum", s3_client, prefix="lmnh", suffix=".csv")
 
     combine_csv_files(historical_file_names,
-                      "combined_historical_data.csv")
+                      "historical_data.csv")
 
     delete_local_files(historical_file_names)
+
+    download_exhibition_data(s3_client)
+
+    exhibition_file_names = extract_s3_bucket_object_names(
+        "sigma-resources-museum", s3_client, prefix="lmnh", suffix=".json")
+
+    data = json_files_to_list(exhibition_file_names)
+    convert_list_of_dicts_to_csv(data, "exhibition_data.csv")
+
+    delete_local_files(exhibition_file_names)
+
+
+if __name__ == "__main__":
+    s3_client = get_s3_client(environ)
+
+    download_and_format_data_from_s3_bucket(s3_client)
