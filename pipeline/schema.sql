@@ -1,5 +1,3 @@
--- This file should contain all code required to create & seed postgres database tables.
-
 CREATE TABLE floor(
     floor_id SMALLINT GENERATED ALWAYS AS IDENTITY NOT NULL,
     number SMALLINT NOT NULL UNIQUE,
