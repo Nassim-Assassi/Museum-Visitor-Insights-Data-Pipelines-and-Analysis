@@ -1,4 +1,13 @@
+terraform {
+  required_providers {
+    aws   = { source = "hashicorp/aws" }
+    http  = { source = "hashicorp/http" }
+    local = { source = "hashicorp/local" }
+  }
+}
+
 provider "aws" {
+  region = "eu-west-2"
 }
 
 # make a security group in the cloud 

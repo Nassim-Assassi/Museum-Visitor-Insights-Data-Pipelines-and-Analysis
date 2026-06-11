@@ -40,18 +40,19 @@ def load_clean_historical_csv() -> pd.DataFrame:
 def get_db_engine(config: _Environ):
     """Establish a connection to the PostgreSQL database using SQLAlchemy."""
     return create_engine(
-        f"postgresql://{config.get('DATABASE_USERNAME')}:{config.get('DATABASE_PASSWORD')}@{config.get('DATABASE_IP')}:{config.get('DATABASE_PORT')}/{config.get('DATABASE_NAME')}"
+        f"postgresql://{config.get('DATABASE_USER')}:{config.get('DATABASE_PASSWORD')}@{config.get('DATABASE_HOST')}:{config.get('DATABASE_PORT')}/{config.get('DATABASE_DB')}"
     )
 
 
 def get_db_connection(config: _Environ):
     """Establish a connection to the PostgreSQL database."""
     return connect(
-        dbname=config.get("DATABASE_NAME"),
-        user=config.get("DATABASE_USERNAME"),
+        host=config.get("DATABASE_HOST"),
+        port=config.get("DATABASE_PORT"),
+        user=config.get("DATABASE_USER"),
         password=config.get("DATABASE_PASSWORD"),
-        host=config.get("DATABASE_IP"),
-        port=config.get("DATABASE_PORT")
+        dbname=config.get("DATABASE_DB"),
+        sslmode='require',
     )
 
 

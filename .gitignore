@@ -99,6 +99,6 @@ venv/
 *.csv
 *.json
 
-*.tfvars
+*.tfvars*
 *.tfstate*
-*.tfstate.backup
+*.tfstate.backup*
