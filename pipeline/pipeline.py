@@ -5,34 +5,20 @@ from os import environ, _Environ
 
 from dotenv import load_dotenv
 
-from extract import get_s3_client, download_and_format_data_from_s3_bucket, clean_up_temp_files
-from seed_database import (
-    get_db_engine,
-    get_db_connection,
-    load_exhibition_csv,
-    load_historical_csv,
-    clean_exhibition_data,
-    validate_exhibition_data,
-    validate_historical_data,
-    drop_schema_tables,
-    create_schema_tables,
-    build_and_insert_tables,
-)
-
-
-def setup_logging(level=logging.INFO):
-    """Configure logging for the pipeline."""
-    logging.basicConfig(
-        level=level,
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-        handlers=[logging.StreamHandler(sys.stdout)],
-    )
+from extract import clean_up_temp_extract_files, get_s3_client, download_and_format_data_from_s3_bucket
+from transform import run_transform, clean_up_temp_transform_files
+from load import run_load, verify_clean_files_exist, get_db_engine, get_db_connection
 
 
 def parse_arguments():
     """Parse command-line arguments."""
     parser = argparse.ArgumentParser(
         description="ETL pipeline for museum kiosk data"
+    )
+    parser.add_argument(
+        "-v", "--verbose",
+        action="store_true",
+        help="Enable verbose logging",
     )
     parser.add_argument(
         "--bucket",
@@ -68,111 +54,112 @@ def parse_arguments():
 
 
 if __name__ == "__main__":
-    setup_logging()
-    logger = logging.getLogger(__name__)
+    load_dotenv()
 
     args = parse_arguments()
-    logger.info("Pipeline started with arguments: %s", args)
 
-    # If --etl is specified, or no phase flags are specified, run all phases
-    if args.etl or (not args.extract and not args.transform and not args.load):
+    logging.basicConfig(
+        level=logging.DEBUG if args.verbose else logging.INFO,
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+        handlers=[logging.StreamHandler(sys.stdout)]
+    )
+    logger = logging.getLogger(__name__)
+
+    logger.info(f"Pipeline started with arguments: {args}")
+
+    # Determine which phases to run
+    # Extract and load without transform is not a valid combination, since transform is needed to produce the cleaned files for load
+    if args.extract and args.load and not args.transform:
+        logger.error(
+            "Invalid combination of flags: --extract and --load cannot be used without --transform. Exiting."
+        )
+        sys.exit(1)
+
+    # If no flags specified, default to running all phases
+    if not args.etl and not args.extract and not args.transform and not args.load:
         args.extract = True
         args.transform = True
         args.load = True
-        if args.etl:
-            logger.info("Running full ETL pipeline (--etl flag)")
-        else:
-            logger.info(
-                "No phase flags specified, running full ETL pipeline by default")
+        logger.info(
+            "No phase flags specified, running full ETL pipeline by default")
 
-    # Load environment variables
-    load_dotenv()
-    logger.info("Environment variables loaded")
+    elif args.etl:
+        args.extract = True
+        args.transform = True
+        args.load = True
+        logger.info("Running full ETL pipeline (--etl flag)")
 
-    # Initialize variables
-    engine = None
     conn = None
-    exhibition_data = None
-    historical_data = None
+    engine = None
 
     try:
         # Extract phase
         if args.extract:
             logger.info(
-                "Starting extraction phase from bucket: %s...", args.bucket)
-            s3_client = get_s3_client(environ)
-            download_and_format_data_from_s3_bucket(s3_client, args.bucket)
-            logger.info("Extraction phase completed")
-        else:
-            logger.info("Skipping extraction phase")
+                f"Starting extraction phase from bucket: {args.bucket}...")
+            try:
+                s3_client = get_s3_client(environ)
+                logger.info("S3 client initialized")
+
+                download_and_format_data_from_s3_bucket(s3_client, args.bucket)
+                logger.info("Data download and formatting completed")
+
+            except Exception as e:
+                logger.exception(f"Error in extract module: {e}")
+                sys.exit(1)
 
         # Transform phase
         if args.transform:
             logger.info("Starting transformation phase...")
-
-            logger.info("Loading exhibition data...")
-            exhibition_data = load_exhibition_csv()
-            logger.info("Loaded %d exhibition records", len(exhibition_data))
-
-            logger.info("Loading historical data...")
-            historical_data = load_historical_csv()
-            logger.info("Loaded %d historical records", len(historical_data))
-
-            logger.info("Cleaning exhibition data...")
-            clean_exhibition_data(exhibition_data)
-
-            # Validate data
-            logger.info("Validating exhibition data...")
-            exhibition_data = validate_exhibition_data(exhibition_data)
-            logger.info("Exhibition data validated: %d records",
-                        len(exhibition_data))
-
-            logger.info("Validating historical data...")
-            historical_data = validate_historical_data(historical_data)
-            logger.info("Historical data validated: %d records",
-                        len(historical_data))
-
-            logger.info("Transformation phase completed")
-        else:
-            logger.info("Skipping transformation phase")
+            try:
+                run_transform()
+                logger.info("Transformation phase completed")
+            except Exception as e:
+                logger.exception(f"Error in transform module: {e}")
+                sys.exit(1)
 
         # Load phase
         if args.load:
             logger.info("Starting load phase...")
+            try:
+                # Create database connections once for load phase
+                engine = get_db_engine(environ)
+                conn = get_db_connection(environ)
+                logger.info("Database connections established")
 
-            # Database operations
-            logger.info("Connecting to database...")
-            engine = get_db_engine(environ)
-            conn = get_db_connection(environ)
-            logger.info("Database connection established")
+                verify_clean_files_exist()
+                run_load(conn, engine, args.schema)
+                logger.info("Load phase completed")
 
-            logger.info("Dropping existing tables...")
-            drop_schema_tables(conn)
-            logger.info("Creating schema tables from %s...", args.schema)
-            create_schema_tables(conn, args.schema)
-            logger.info("Schema tables created")
+            except Exception as e:
+                logger.error(f"Error in load module: {e}")
+                sys.exit(1)
 
-            logger.info("Inserting data into database...")
-            build_and_insert_tables(
-                conn, engine, exhibition_data, historical_data)
-            logger.info("Data insertion completed successfully")
-
-            logger.info("Load phase completed")
-        else:
-            logger.info("Skipping load phase")
+        # Cleanup phase
+        try:
+            if args.extract and args.transform:
+                clean_up_temp_extract_files()
+                logger.info("Temporary extracted files cleaned up")
+            if args.transform and args.load:
+                clean_up_temp_transform_files()
+                logger.info("Temporary transformed files cleaned up")
+        except Exception as e:
+            logger.error(f"Error cleaning up temporary files: {e}")
+            sys.exit(1)
 
         logger.info("Pipeline completed successfully")
 
     except Exception as e:
-        logger.exception("Pipeline failed with error: %s", str(e))
+        logger.error(f"Pipeline failed: {e}")
         sys.exit(1)
-
     finally:
         try:
             if conn is not None:
                 conn.close()
+                logger.info("Database connection closed")
             if engine is not None:
                 engine.dispose()
-            logger.info("Database connections closed")
+                logger.info("Database engine disposed")
         except Exception as e:
-            logger.warning("Error closing database connections: %s", str(e))
+            logger.error(f"Error closing database connections: {e}")

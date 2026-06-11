@@ -98,3 +98,7 @@ venv/
 
 *.csv
 *.json
+
+*.tfvars
+*.tfstate*
+*.tfstate.backup
