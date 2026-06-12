@@ -1,7 +1,7 @@
 import argparse
 import logging
 import sys
-from os import environ, _Environ
+from os import environ
 
 from dotenv import load_dotenv
 

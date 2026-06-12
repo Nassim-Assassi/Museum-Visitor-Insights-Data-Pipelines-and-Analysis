@@ -1,5 +1,5 @@
 CREATE TABLE floor(
-    floor_id SMALLINT GENERATED ALWAYS AS IDENTITY NOT NULL,
+    floor_id SMALLINT GENERATED ALWAYS AS IDENTITY,
     number SMALLINT NOT NULL UNIQUE,
     name TEXT NULL UNIQUE,
     PRIMARY KEY(floor_id)
@@ -7,20 +7,20 @@ CREATE TABLE floor(
 );
 
 CREATE TABLE department(
-    department_id SMALLINT GENERATED ALWAYS AS IDENTITY NOT NULL,
+    department_id SMALLINT GENERATED ALWAYS AS IDENTITY,
     name TEXT NOT NULL UNIQUE,
     PRIMARY KEY(department_id)
 );
 
 CREATE TABLE button_type(
-    button_type_id SMALLINT GENERATED ALWAYS AS IDENTITY NOT NULL,
+    button_type_id SMALLINT GENERATED ALWAYS AS IDENTITY,
     name TEXT NOT NULL UNIQUE,
     PRIMARY KEY(button_type_id),
     CONSTRAINT button_type_valid CHECK (name IN ('rating', 'other'))
 );
 
 CREATE TABLE button(
-    button_id SMALLINT GENERATED ALWAYS AS IDENTITY NOT NULL,
+    button_id SMALLINT GENERATED ALWAYS AS IDENTITY,
     button_type_id SMALLINT NOT NULL,
     description TEXT NOT NULL UNIQUE,
     value SMALLINT,
@@ -30,7 +30,7 @@ CREATE TABLE button(
 );
 
 CREATE TABLE exhibit(
-    exhibit_id INTEGER NOT NULL,
+    exhibit_id INTEGER,
     name TEXT NOT NULL UNIQUE,
     floor_id SMALLINT NOT NULL,
     department_id SMALLINT NOT NULL,
@@ -42,7 +42,7 @@ CREATE TABLE exhibit(
 );
 
 CREATE TABLE kiosk_output(
-    kiosk_output_id INTEGER GENERATED ALWAYS AS IDENTITY NOT NULL,
+    kiosk_output_id INTEGER GENERATED ALWAYS AS IDENTITY,
     recorded_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL,
     exhibit_id INTEGER NOT NULL,
     button_id SMALLINT NOT NULL,

@@ -15,16 +15,6 @@ CLEAN_EXHIBITION_FILE = "clean_exhibition.csv"
 CLEAN_HISTORICAL_FILE = "clean_historical.csv"
 
 
-def verify_clean_files_exist() -> None:
-    """Verify that the clean CSV files exist."""
-    if not os.path.exists(CLEAN_EXHIBITION_FILE):
-        raise FileNotFoundError(
-            f"Clean exhibition file not found: {CLEAN_EXHIBITION_FILE}")
-    if not os.path.exists(CLEAN_HISTORICAL_FILE):
-        raise FileNotFoundError(
-            f"Clean historical file not found: {CLEAN_HISTORICAL_FILE}")
-
-
 def load_clean_exhibition_csv() -> pd.DataFrame:
     """Load clean exhibition data from transform phase."""
     return pd.read_csv(CLEAN_EXHIBITION_FILE)
@@ -220,7 +210,7 @@ def build_kiosk_output_table(description_button_id_dict: dict, value_button_id_d
     return kiosk_output_data
 
 
-def ensure_clean_files_exist() -> None:
+def verify_clean_files_exist() -> None:
     """Ensure cleaned CSVs from transform phase exist before loading."""
     required_files = [
         CLEAN_EXHIBITION_FILE,
@@ -236,7 +226,7 @@ def ensure_clean_files_exist() -> None:
 
 def build_and_insert_tables(conn, engine) -> None:
     """Build all tables from cleaned data and insert into database with ID linking."""
-    ensure_clean_files_exist()
+    verify_clean_files_exist()
 
     # Load cleaned data from transform phase
     exhibition_data = load_clean_exhibition_csv()

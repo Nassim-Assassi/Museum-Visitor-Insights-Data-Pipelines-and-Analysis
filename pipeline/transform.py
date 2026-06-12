@@ -126,9 +126,9 @@ def convert_exhibition_id_to_int(exhibition_data: pd.DataFrame) -> None:
     Exhibition data is currently in the format EXH_01, EXH_02, etc.
     """
     try:
-        exhibition_data["EXHIBITION_ID"] = exhibition_data["EXHIBITION_ID"].str.slice(
-            -2
-        ).astype("Int64", errors="ignore")
+        exhibition_data["EXHIBITION_ID"] = exhibition_data["EXHIBITION_ID"].str.split(
+            "_"
+        ).str[-1].astype("Int64", errors="ignore")
         # Check for any NaN values that resulted from coercion
         nan_count = exhibition_data["EXHIBITION_ID"].isna().sum()
         if nan_count > 0:

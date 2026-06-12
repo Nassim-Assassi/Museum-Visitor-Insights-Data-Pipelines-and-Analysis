@@ -59,27 +59,18 @@ def extract_object_from_S3_bucket(bucket_name: str, file_name: str, s3_client: c
             f"Failed to download {file_name} from S3 bucket {bucket_name}")
 
 
-def extract_objects_from_S3_bucket(bucket_name: str, file_names: list[str], s3_client: client, save_dir: str = ".") -> None:
+def extract_objects_from_S3_bucket(s3_client: client, bucket_name: str, file_names: list[str],  save_dir: str = ".") -> None:
     """Extracts objects from an S3 bucket and saves them to local files."""
     for file_name in file_names:
         extract_object_from_S3_bucket(
             bucket_name, file_name, s3_client, save_dir)
 
 
-def download_exhibition_data(s3_client: client, bucket_name: str = "sigma-resources-museum") -> None:
-    lmnh_exhibition_object_names = extract_s3_bucket_object_names(
-        bucket_name, s3_client, prefix="lmnh", suffix=".json")
-
-    extract_objects_from_S3_bucket(
-        bucket_name, lmnh_exhibition_object_names, s3_client)
-
-
-def download_historical_data(s3_client: client, bucket_name: str = "sigma-resources-museum") -> None:
-    lmnh_historical_data_object_names = extract_s3_bucket_object_names(
-        bucket_name, s3_client,  prefix="lmnh", suffix=".csv")
-
-    extract_objects_from_S3_bucket(
-        bucket_name, lmnh_historical_data_object_names, s3_client)
+def download_data_from_s3_with_suffix(s3_client: client, bucket_name: str = "sigma-resources-museum", suffix: str = "") -> None:
+    """Downloads data from an S3 bucket with a specific suffix and saves it to local files."""
+    object_names = extract_s3_bucket_object_names(
+        bucket_name, s3_client, prefix="lmnh", suffix=suffix)
+    extract_objects_from_S3_bucket(s3_client, bucket_name, object_names)
 
 
 def combine_csv_files(file_names: list[str], output_file_name: str) -> None:
@@ -143,7 +134,7 @@ def download_and_format_data_from_s3_bucket(s3_client: client, bucket_name) -> N
     Extracts all relevant data from an S3 bucket and saves it to local files.
     Combines the historical data into a single CSV file and converts the exhibition data from JSON to CSV format.
     """
-    download_historical_data(s3_client, bucket_name)
+    download_data_from_s3_with_suffix(s3_client, bucket_name, suffix=".csv")
 
     historical_file_names = extract_s3_bucket_object_names(
         bucket_name, s3_client, prefix="lmnh", suffix=".csv")
@@ -153,7 +144,7 @@ def download_and_format_data_from_s3_bucket(s3_client: client, bucket_name) -> N
 
     delete_local_files(historical_file_names)
 
-    download_exhibition_data(s3_client, bucket_name)
+    download_data_from_s3_with_suffix(s3_client, bucket_name, suffix=".json")
 
     exhibition_file_names = extract_s3_bucket_object_names(
         bucket_name, s3_client, prefix="lmnh", suffix=".json")
