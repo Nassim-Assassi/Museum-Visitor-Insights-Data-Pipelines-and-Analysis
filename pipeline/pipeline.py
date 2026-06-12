@@ -84,6 +84,7 @@ if __name__ == "__main__":
         logger.info(
             "No phase flags specified, running full ETL pipeline by default")
 
+     # If etl flag specified, run all phases
     elif args.etl:
         args.extract = True
         args.transform = True
@@ -106,7 +107,7 @@ if __name__ == "__main__":
                 logger.info("Data download and formatting completed")
 
             except Exception as e:
-                logger.exception(f"Error in extract module: {e}")
+                logger.error(f"Error in extract module: {e}")
                 sys.exit(1)
 
         # Transform phase
@@ -116,7 +117,7 @@ if __name__ == "__main__":
                 run_transform()
                 logger.info("Transformation phase completed")
             except Exception as e:
-                logger.exception(f"Error in transform module: {e}")
+                logger.error(f"Error in transform module: {e}")
                 sys.exit(1)
 
         # Load phase

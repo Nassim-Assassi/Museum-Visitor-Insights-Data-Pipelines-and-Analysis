@@ -2,7 +2,6 @@
 
 import logging
 import os
-import sys
 
 import pandas as pd
 
@@ -234,18 +233,3 @@ def clean_up_temp_transform_files() -> None:
                 f"Temporary file {file_name} not found, skipping deletion")
         except Exception as e:
             logger.error(f"Error deleting temporary file {file_name}: {e}")
-
-
-if __name__ == "__main__":
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    )
-    logger = logging.getLogger(__name__)
-
-    try:
-        logger.info("Running transformation phase...")
-        run_transform()
-    except Exception as e:
-        logger.error(e)
-        sys.exit(1)

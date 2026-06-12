@@ -2,13 +2,11 @@
 
 import logging
 import os
-import sys
-from os import environ, _Environ
+from os import _Environ
 
 import pandas as pd
 from psycopg2 import connect
 from sqlalchemy import create_engine
-from dotenv import load_dotenv
 
 logger = logging.getLogger(__name__)
 
@@ -314,37 +312,3 @@ def run_load(conn, engine, schema_path: str) -> None:
         "Building tables from cleaned data and inserting into database...")
     build_and_insert_tables(conn, engine)
     logger.info("Data inserted into database")
-
-
-if __name__ == "__main__":
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-        handlers=[logging.StreamHandler(sys.stdout)]
-    )
-    logger = logging.getLogger(__name__)
-    load_dotenv()
-
-    logger.info("Load module started")
-
-    engine = None
-    conn = None
-
-    try:
-        engine = get_db_engine(environ)
-        conn = get_db_connection(environ)
-        ensure_clean_files_exist()
-        run_load(engine=engine, conn=conn, schema_path="schema.sql")
-        logger.info("Load phase completed successfully")
-    except Exception as e:
-        logger.error(e)
-        sys.exit(1)
-    finally:
-        try:
-            if conn is not None:
-                conn.close()
-            if engine is not None:
-                engine.dispose()
-            logger.info("Database connections closed")
-        except Exception as e:
-            logger.error(f"Error closing database connections: {str(e)}")

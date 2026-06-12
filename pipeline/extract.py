@@ -7,8 +7,6 @@ import sys
 from botocore.exceptions import ClientError
 from boto3 import client
 
-from dotenv import load_dotenv
-
 import pandas as pd
 
 logger = logging.getLogger(__name__)
@@ -175,25 +173,3 @@ def clean_up_temp_extract_files() -> None:
             pass
         except OSError as e:
             raise Exception(f"Error deleting temporary file {file_name}: {e}")
-
-
-if __name__ == "__main__":
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    )
-    logger.info("Extract module started")
-
-    load_dotenv()
-
-    try:
-        s3_client = get_s3_client(environ)
-        logger.info("S3 client initialized")
-
-        download_and_format_data_from_s3_bucket(
-            s3_client, bucket_name="sigma-resources-museum")
-        logger.info("Data download and formatting completed")
-
-    except Exception as e:
-        logger.error(e)
-        sys.exit(1)

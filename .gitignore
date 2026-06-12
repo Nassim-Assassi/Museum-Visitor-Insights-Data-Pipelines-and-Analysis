@@ -102,3 +102,5 @@ venv/
 *.tfvars*
 *.tfstate*
 *.tfstate.backup*
+
+*.png
