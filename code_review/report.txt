@@ -22,97 +22,116 @@
 ./coding_problems/advent_of_code/day_3/test_day_3.py
 ************* Module .pylintrc
 .pylintrc:1:0: E0015: Unrecognized option found: suggestion-mode (unrecognized-option)
+./pipeline/test_live_pipeline.py
+************* Module .pylintrc
+.pylintrc:1:0: E0015: Unrecognized option found: suggestion-mode (unrecognized-option)
+./pipeline/seed_database.py
+************* Module .pylintrc
+.pylintrc:1:0: E0015: Unrecognized option found: suggestion-mode (unrecognized-option)
+************* Module seed_database
+pipeline/seed_database.py:8:0: C0301: Line too long (170/150) (line-too-long)
+pipeline/seed_database.py:9:0: C0301: Line too long (295/150) (line-too-long)
+pipeline/seed_database.py:13:0: C0103: Function name "download_and_format_exhibition_data_from_s3_bucket" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)
+pipeline/seed_database.py:13:55: C0103: Argument name "s3_client" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<UPPER_CASE>[A-Z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)
+pipeline/seed_database.py:36:8: W0707: Consider explicitly re-raising using 'raise Exception(f'Error deleting temporary file exhibition_data.csv: {e}') from e' (raise-missing-from)
+pipeline/seed_database.py:47:8: W0707: Consider explicitly re-raising using 'raise Exception(f'Error deleting temporary file clean_exhibition.csv: {e}') from e' (raise-missing-from)
+pipeline/seed_database.py:59:4: E0606: Possibly using variable 'logger' before assignment (possibly-used-before-assignment)
+pipeline/seed_database.py:70:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/seed_database.py:76:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/seed_database.py:86:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/seed_database.py:92:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/seed_database.py:100:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/seed_database.py:120:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/seed_database.py:131:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/seed_database.py:142:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/seed_database.py:161:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/seed_database.py:172:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/seed_database.py:178:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/seed_database.py:189:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+
+-----------------------------------
+Your code has been rated at 7.95/10
+
 ./pipeline/extract.py
 ************* Module .pylintrc
 .pylintrc:1:0: E0015: Unrecognized option found: suggestion-mode (unrecognized-option)
 ************* Module extract
-pipeline/extract.py:15:0: C0103: Function name "get_s3_client" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)
-pipeline/extract.py:17:4: C0103: Variable name "s3_client" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)
-pipeline/extract.py:25:0: C0103: Function name "extract_s3_bucket_object_names" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)
-pipeline/extract.py:25:53: C0103: Argument name "s3_client" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<UPPER_CASE>[A-Z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)
-pipeline/extract.py:39:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
-pipeline/extract.py:44:8: W0707: Consider explicitly re-raising using 'raise Exception(f'Failed to list objects from S3 bucket {bucket_name}') from e' (raise-missing-from)
-pipeline/extract.py:43:4: W0612: Unused variable 'e' (unused-variable)
-pipeline/extract.py:49:0: C0103: Function name "extract_object_from_S3_bucket" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)
-pipeline/extract.py:49:68: C0103: Argument name "s3_client" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<UPPER_CASE>[A-Z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)
-pipeline/extract.py:54:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
-pipeline/extract.py:58:8: W0707: Consider explicitly re-raising using 'raise Exception(f'Failed to download {file_name} from S3 bucket {bucket_name}') from e' (raise-missing-from)
-pipeline/extract.py:57:4: W0612: Unused variable 'e' (unused-variable)
-pipeline/extract.py:62:0: C0103: Function name "extract_objects_from_S3_bucket" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)
-pipeline/extract.py:62:35: C0103: Argument name "s3_client" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<UPPER_CASE>[A-Z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)
-pipeline/extract.py:69:0: C0103: Function name "download_data_from_s3_with_suffix" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)
-pipeline/extract.py:69:38: C0103: Argument name "s3_client" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<UPPER_CASE>[A-Z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)
-pipeline/extract.py:79:13: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
-pipeline/extract.py:81:21: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
-pipeline/extract.py:86:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
-pipeline/extract.py:90:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
-pipeline/extract.py:99:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
-pipeline/extract.py:101:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
-pipeline/extract.py:103:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
-pipeline/extract.py:111:17: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
-pipeline/extract.py:113:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
-pipeline/extract.py:115:12: W0707: Consider explicitly re-raising using 'raise Exception(f'Failed to load JSON file {file_name}') from e' (raise-missing-from)
-pipeline/extract.py:116:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
-pipeline/extract.py:114:8: W0612: Unused variable 'e' (unused-variable)
-pipeline/extract.py:125:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
-pipeline/extract.py:129:8: W0707: Consider explicitly re-raising using 'raise Exception(f'Failed to convert data to CSV: {output_file_name}') from e' (raise-missing-from)
-pipeline/extract.py:128:4: W0612: Unused variable 'e' (unused-variable)
-pipeline/extract.py:132:0: C0103: Function name "download_and_format_data_from_s3_bucket" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)
-pipeline/extract.py:132:44: C0103: Argument name "s3_client" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<UPPER_CASE>[A-Z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)
-pipeline/extract.py:160:21: R6102: Consider using an in-place tuple instead of list (consider-using-tuple)
-pipeline/extract.py:166:12: W0707: Consider explicitly re-raising using 'raise Exception(f'Error deleting temporary file {file_name}: {e}') from e' (raise-missing-from)
-pipeline/extract.py:6:0: W0612: Unused variable 'sys' (unused-variable)
-pipeline/extract.py:15:0: W0612: Unused variable 'get_s3_client' (unused-variable)
-pipeline/extract.py:132:0: W0612: Unused variable 'download_and_format_data_from_s3_bucket' (unused-variable)
-pipeline/extract.py:158:0: W0612: Unused variable 'clean_up_temp_extract_files' (unused-variable)
-pipeline/extract.py:3:0: W0612: Unused variable 'environ' (unused-variable)
-pipeline/extract.py:3:0: W0611: Unused environ imported from os (unused-import)
-pipeline/extract.py:6:0: W0611: Unused import sys (unused-import)
+pipeline/extract.py:13:0: C0103: Function name "get_s3_client" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)
+pipeline/extract.py:15:4: C0103: Variable name "s3_client" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)
+pipeline/extract.py:23:0: C0103: Function name "extract_s3_bucket_object_names" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)
+pipeline/extract.py:23:53: C0103: Argument name "s3_client" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<UPPER_CASE>[A-Z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)
+pipeline/extract.py:36:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/extract.py:42:0: C0103: Function name "extract_object_from_S3_bucket" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)
+pipeline/extract.py:42:68: C0103: Argument name "s3_client" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<UPPER_CASE>[A-Z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)
+pipeline/extract.py:46:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/extract.py:51:0: C0103: Function name "extract_objects_from_S3_bucket" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)
+pipeline/extract.py:51:35: C0103: Argument name "s3_client" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<UPPER_CASE>[A-Z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)
+pipeline/extract.py:58:0: C0103: Function name "download_data_from_s3_with_suffix" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)
+pipeline/extract.py:58:38: C0103: Argument name "s3_client" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<UPPER_CASE>[A-Z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)
+pipeline/extract.py:67:9: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
+pipeline/extract.py:69:17: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
+pipeline/extract.py:74:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/extract.py:84:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/extract.py:86:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/extract.py:88:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/extract.py:95:13: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
+pipeline/extract.py:97:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/extract.py:98:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/extract.py:106:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/extract.py:111:29: C0103: Argument name "s3_client" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<UPPER_CASE>[A-Z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)
+pipeline/extract.py:124:29: C0103: Argument name "s3_client" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<UPPER_CASE>[A-Z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)
+pipeline/extract.py:137:0: C0103: Function name "download_and_format_data_from_s3_bucket" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)
+pipeline/extract.py:137:44: C0103: Argument name "s3_client" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<UPPER_CASE>[A-Z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)
+pipeline/extract.py:148:21: R6102: Consider using an in-place tuple instead of list (consider-using-tuple)
+pipeline/extract.py:13:0: W0612: Unused variable 'get_s3_client' (unused-variable)
+pipeline/extract.py:137:0: W0612: Unused variable 'download_and_format_data_from_s3_bucket' (unused-variable)
+pipeline/extract.py:146:0: W0612: Unused variable 'clean_up_temp_extract_files' (unused-variable)
+pipeline/extract.py:5:0: W0612: Unused variable 'ClientError' (unused-variable)
+pipeline/extract.py:5:0: W0611: Unused ClientError imported from botocore.exceptions (unused-import)
 
 -----------------------------------
-Your code has been rated at 5.43/10
+Your code has been rated at 5.79/10
 
 ./pipeline/load.py
 ************* Module .pylintrc
 .pylintrc:1:0: E0015: Unrecognized option found: suggestion-mode (unrecognized-option)
 ************* Module load
-pipeline/load.py:31:0: C0301: Line too long (175/150) (line-too-long)
-pipeline/load.py:199:0: C0301: Line too long (223/150) (line-too-long)
-pipeline/load.py:54:4: W0612: Unused variable 'e' (unused-variable)
-pipeline/load.py:63:17: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
-pipeline/load.py:68:4: W0612: Unused variable 'e' (unused-variable)
-pipeline/load.py:184:56: R6201: Consider using set for membership test (use-set-for-membership)
-pipeline/load.py:198:121: R6201: Consider using set for membership test (use-set-for-membership)
-pipeline/load.py:206:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
-pipeline/load.py:238:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
-pipeline/load.py:244:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
-pipeline/load.py:254:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
-pipeline/load.py:260:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
-pipeline/load.py:268:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
-pipeline/load.py:279:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
-pipeline/load.py:282:0: W9016: "conn, engine" missing in parameter type documentation (missing-type-doc)
-pipeline/load.py:28:0: W0612: Unused variable 'get_db_engine' (unused-variable)
-pipeline/load.py:35:0: W0612: Unused variable 'get_db_connection' (unused-variable)
-pipeline/load.py:282:0: W0612: Unused variable 'run_load' (unused-variable)
+pipeline/load.py:30:0: C0301: Line too long (175/150) (line-too-long)
+pipeline/load.py:53:4: W0612: Unused variable 'e' (unused-variable)
+pipeline/load.py:62:17: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
+pipeline/load.py:67:4: W0612: Unused variable 'e' (unused-variable)
+pipeline/load.py:183:56: R6201: Consider using set for membership test (use-set-for-membership)
+pipeline/load.py:187:83: E1131: unsupported operand type(s) for | (unsupported-binary-operation)
+pipeline/load.py:224:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/load.py:250:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/load.py:256:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/load.py:266:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/load.py:275:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/load.py:283:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/load.py:294:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/load.py:319:0: W9016: "conn, engine" missing in parameter type documentation (missing-type-doc)
+pipeline/load.py:27:0: W0612: Unused variable 'get_db_engine' (unused-variable)
+pipeline/load.py:34:0: W0612: Unused variable 'get_db_connection' (unused-variable)
+pipeline/load.py:319:0: W0612: Unused variable 'run_load' (unused-variable)
 
 -----------------------------------
-Your code has been rated at 8.76/10
+Your code has been rated at 8.70/10
 
 ./pipeline/pipeline.py
 ************* Module .pylintrc
 .pylintrc:1:0: E0015: Unrecognized option found: suggestion-mode (unrecognized-option)
 ************* Module pipeline
-pipeline/pipeline.py:69:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
-pipeline/pipeline.py:100:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
-pipeline/pipeline.py:110:16: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
-pipeline/pipeline.py:120:16: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
-pipeline/pipeline.py:137:16: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
-pipeline/pipeline.py:149:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
-pipeline/pipeline.py:155:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
-pipeline/pipeline.py:166:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/pipeline.py:70:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/pipeline.py:101:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/pipeline.py:111:16: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/pipeline.py:121:16: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/pipeline.py:138:16: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/pipeline.py:150:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/pipeline.py:156:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/pipeline.py:167:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
 
 -----------------------------------
-Your code has been rated at 9.14/10
+Your code has been rated at 9.15/10
 
 ./pipeline/transform.py
 ************* Module .pylintrc
@@ -141,4 +160,29 @@ pipeline/transform.py:225:0: W0612: Unused variable 'clean_up_temp_transform_fil
 
 -----------------------------------
 Your code has been rated at 8.06/10
+
+./pipeline/live_pipeline.py
+************* Module .pylintrc
+.pylintrc:1:0: E0015: Unrecognized option found: suggestion-mode (unrecognized-option)
+************* Module live_pipeline
+pipeline/live_pipeline.py:18:28: E1131: unsupported operand type(s) for | (unsupported-binary-operation)
+pipeline/live_pipeline.py:18:51: E1131: unsupported operand type(s) for | (unsupported-binary-operation)
+pipeline/live_pipeline.py:105:16: R1716: Simplify chained comparison between the operands (chained-comparison)
+pipeline/live_pipeline.py:119:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/live_pipeline.py:124:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/live_pipeline.py:129:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/live_pipeline.py:134:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/live_pipeline.py:139:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/live_pipeline.py:144:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/live_pipeline.py:149:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/live_pipeline.py:154:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/live_pipeline.py:159:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/live_pipeline.py:259:0: R0917: Too many positional arguments (6/5) (too-many-positional-arguments)
+pipeline/live_pipeline.py:270:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/live_pipeline.py:319:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/live_pipeline.py:8:0: W0612: Unused variable 'KafkaError' (unused-variable)
+pipeline/live_pipeline.py:8:0: W0611: Unused KafkaError imported from confluent_kafka (unused-import)
+
+-----------------------------------
+Your code has been rated at 8.68/10
 
