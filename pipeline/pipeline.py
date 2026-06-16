@@ -55,6 +55,7 @@ def parse_arguments():
 
 if __name__ == "__main__":
     load_dotenv()
+    config: dict[str, str] = dict(environ)
 
     args = parse_arguments()
 
@@ -100,7 +101,7 @@ if __name__ == "__main__":
             logger.info(
                 f"Starting extraction phase from bucket: {args.bucket}...")
             try:
-                s3_client = get_s3_client(environ)
+                s3_client = get_s3_client(config)
                 logger.info("S3 client initialized")
 
                 download_and_format_data_from_s3_bucket(s3_client, args.bucket)
@@ -125,8 +126,8 @@ if __name__ == "__main__":
             logger.info("Starting load phase...")
             try:
                 # Create database connections once for load phase
-                engine = get_db_engine(environ)
-                conn = get_db_connection(environ)
+                engine = get_db_engine(config)
+                conn = get_db_connection(config)
                 logger.info("Database connections established")
 
                 verify_clean_files_exist()

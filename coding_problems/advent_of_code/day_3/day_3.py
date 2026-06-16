@@ -50,6 +50,10 @@ def get_submarine_consumption(lines) -> int:
     return consumption
 
 
+def get_oxygen_generator_rating(lines) -> int:
+    for column in len(lines[0]):
+
+
 if __name__ == "__main__":
     input = read_input("input.txt")
     input = remove_new_lines(input)

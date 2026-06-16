@@ -51,6 +51,13 @@ resource "local_sensitive_file" "env_file" {
   content  = templatefile(var.ENV_TEMPLATE_PATH, {
     s3_access_key     = var.S3_ACCESS_KEY
     s3_secret_access_key     = var.S3_SECRET_ACCESS_KEY
+    s3_bucket_name = var.S3_BUCKET_NAME
+    kafka_bootstrap_servers = var.KAFKA_BOOTSTRAP_SERVERS
+    kafka_security_protocol = var.KAFKA_SECURITY_PROTOCOL
+    kafka_sasl_mechanism = var.KAFKA_SASL_MECHANISM
+    kafka_sasl_username = var.KAFKA_SASL_USERNAME
+    kafka_sasl_password = var.KAFKA_SASL_PASSWORD
+    kafka_topic = var.KAFKA_TOPIC
     rds_hostname      = aws_db_instance.postgres_db.address
     rds_port          = aws_db_instance.postgres_db.port
     rds_username      = aws_db_instance.postgres_db.username

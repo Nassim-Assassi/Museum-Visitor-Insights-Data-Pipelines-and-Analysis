@@ -2,7 +2,6 @@
 
 import logging
 import os
-from os import _Environ
 
 import pandas as pd
 from psycopg2 import connect
@@ -25,14 +24,14 @@ def load_clean_historical_csv() -> pd.DataFrame:
     return pd.read_csv(CLEAN_HISTORICAL_FILE)
 
 
-def get_db_engine(config: _Environ):
+def get_db_engine(config: dict[str, str]):
     """Establish a connection to the PostgreSQL database using SQLAlchemy."""
     return create_engine(
         f"postgresql://{config.get('DATABASE_USER')}:{config.get('DATABASE_PASSWORD')}@{config.get('DATABASE_HOST')}:{config.get('DATABASE_PORT')}/{config.get('DATABASE_DB')}"
     )
 
 
-def get_db_connection(config: _Environ):
+def get_db_connection(config: dict[str, str]):
     """Establish a connection to the PostgreSQL database."""
     return connect(
         host=config.get("DATABASE_HOST"),
@@ -185,6 +184,22 @@ def build_button_table(button_type_id_dict) -> pd.DataFrame:
     return button_data
 
 
+def map_row_to_button_id(row, value_button_id_dict, description_button_id_dict) -> int | None:
+    val = row["val"]
+    typ = row.get("type")
+
+    if val in {0, 1, 2, 3, 4}:
+        return value_button_id_dict.get(val)
+
+    if val == -1:
+        if typ == 0:
+            return description_button_id_dict.get("assistance")
+        if typ == 1:
+            return description_button_id_dict.get("emergency")
+
+    return None
+
+
 def build_kiosk_output_table(description_button_id_dict: dict, value_button_id_dict: dict, historical_data: pd.DataFrame) -> pd.DataFrame:
     """
     Build the kiosk output table from historical interaction data.
@@ -195,8 +210,11 @@ def build_kiosk_output_table(description_button_id_dict: dict, value_button_id_d
     kiosk_output_data["exhibit_id"] = historical_data["site"]
     # if val is 0 to 4 then it is a rating button, if it is -1 then it is another type of button
     # for others if type is 0 then it is assistance button, if type is 1 then it is emergency button
-    kiosk_output_data["button_id"] = historical_data.apply(lambda row: value_button_id_dict[row["val"]] if row["val"] in [
-                                                           0, 1, 2, 3, 4] else description_button_id_dict["assistance"] if row["type"] == 0 else description_button_id_dict["emergency"] if row["type"] == 1 else None, axis=1)
+    kiosk_output_data["button_id"] = historical_data.apply(
+        map_row_to_button_id,
+        axis=1,
+        args=(value_button_id_dict, description_button_id_dict),
+    )
 
     # Drop rows with None button_id and log a warning
     original_count = len(kiosk_output_data)
@@ -224,14 +242,8 @@ def verify_clean_files_exist() -> None:
         )
 
 
-def build_and_insert_tables(conn, engine) -> None:
-    """Build all tables from cleaned data and insert into database with ID linking."""
-    verify_clean_files_exist()
-
-    # Load cleaned data from transform phase
-    exhibition_data = load_clean_exhibition_csv()
-    historical_data = load_clean_historical_csv()
-
+def insert_floor_department_and_exhibit(conn, engine, exhibition_data: pd.DataFrame) -> None:
+    """Insert floor, department, and exhibit tables with ID linking."""
     # Build floor table and insert
     floor_data = build_floor_table(exhibition_data)
     floor_data.to_sql("floor", engine, if_exists="append", index=False)
@@ -253,6 +265,9 @@ def build_and_insert_tables(conn, engine) -> None:
     exhibit_data.to_sql("exhibit", engine, if_exists="append", index=False)
     logger.info(f"Inserted {len(exhibit_data)} exhibit records")
 
+
+def insert_button_and_kiosk_output(conn, engine, historical_data: pd.DataFrame) -> None:
+    """Insert button-related tables and kiosk output records."""
     # Build button types and insert
     button_type_data = build_button_type_table()
     button_type_data.to_sql("button_type", engine,
@@ -279,6 +294,28 @@ def build_and_insert_tables(conn, engine) -> None:
     logger.info(f"Inserted {len(kiosk_output_data)} kiosk output records")
 
 
+def build_and_insert_tables(conn, engine) -> None:
+    """Build all tables from cleaned data and insert into database with ID linking."""
+    verify_clean_files_exist()
+
+    # Load cleaned data from transform phase
+    exhibition_data = load_clean_exhibition_csv()
+    historical_data = load_clean_historical_csv()
+    insert_floor_department_and_exhibit(conn, engine, exhibition_data)
+    insert_button_and_kiosk_output(conn, engine, historical_data)
+
+
+def reset_schema(conn, schema_path: str) -> None:
+    """Drop and recreate schema tables."""
+    logger.info("Dropping existing tables if they exist...")
+    drop_schema_tables(conn)
+    logger.info("Existing tables dropped")
+
+    logger.info("Creating schema tables...")
+    create_schema_tables(conn, schema_path)
+    logger.info("Schema tables created")
+
+
 def run_load(conn, engine, schema_path: str) -> None:
     """
     Orchestrate the load phase: drop, create schema, build and insert all tables with ID linking.
@@ -290,13 +327,7 @@ def run_load(conn, engine, schema_path: str) -> None:
         conn: PostgreSQL connection
     """
 
-    logger.info("Dropping existing tables if they exist...")
-    drop_schema_tables(conn)
-    logger.info("Existing tables dropped")
-
-    logger.info("Creating schema tables...")
-    create_schema_tables(conn, schema_path)
-    logger.info("Schema tables created")
+    reset_schema(conn, schema_path)
 
     logger.info(
         "Building tables from cleaned data and inserting into database...")
