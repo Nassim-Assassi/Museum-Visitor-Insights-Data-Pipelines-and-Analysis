@@ -3,6 +3,7 @@ terraform {
     aws   = { source = "hashicorp/aws" }
     http  = { source = "hashicorp/http" }
     local = { source = "hashicorp/local" }
+    tls   = { source = "hashicorp/tls" }
   }
 }
 
@@ -10,20 +11,41 @@ provider "aws" {
   region = "eu-west-2"
 }
 
-# make a security group in the cloud 
-# allows inbound access to a database
+# Create an SSH key pair and save the private key locally.
 
-resource "aws_security_group" "database_sg" {
-    name        = var.DB_SECURITY_GROUP_NAME
-    description = "Allow inbound access to a postgres database on port 5432"
-    vpc_id      = var.VPC_ID
+resource "tls_private_key" "ec2_ssh" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
 }
 
+resource "local_sensitive_file" "ec2_private_key" {
+  filename        = "${var.BASE_DIR}/${var.EC2_KEY_PAIR_NAME}.pem"
+  content         = tls_private_key.ec2_ssh.private_key_pem
+  file_permission = "0600"
+}
+
+resource "aws_key_pair" "ec2_key" {
+  key_name   = var.EC2_KEY_PAIR_NAME
+  public_key = tls_private_key.ec2_ssh.public_key_openssh
+}
+
+
 # Fetch your current public IP address
+
 data "http" "my_public_ip" {
   url = "https://api.ipify.org"
 }
 
+# Create a Postgres database:
+
+# Create a security group for the Postgres database instance
+resource "aws_security_group" "database_sg" {
+    name        = var.DB_SECURITY_GROUP_NAME
+    description = "Allow inbound access to a Postgres database on port 5432"
+    vpc_id      = var.VPC_ID
+}
+
+# Allow inbound access to the Postgres database from your current public IP address on port 5432
 resource "aws_vpc_security_group_ingress_rule" "allow_access_on_postgres_port_for_my_ip" {
   security_group_id = aws_security_group.database_sg.id
   cidr_ipv4         = "${data.http.my_public_ip.response_body}/32"
@@ -32,6 +54,17 @@ resource "aws_vpc_security_group_ingress_rule" "allow_access_on_postgres_port_fo
   to_port           = 5432
 }
 
+
+# Allow inbound access to the Postgres database from the ec2 instance on port 5432
+resource "aws_vpc_security_group_ingress_rule" "allow_access_on_postgres_port_for_ec2" {
+  security_group_id = aws_security_group.database_sg.id
+  referenced_security_group_id = aws_security_group.ec2_sg.id
+  from_port         = 5432
+  ip_protocol       = "tcp"
+  to_port           = 5432
+}
+
+# Create a Postgres database instance in AWS RDS
 resource "aws_db_instance" "postgres_db" {
   identifier           = var.DB_INSTANCE_NAME
   instance_class       = "db.t3.micro"
@@ -46,9 +79,47 @@ resource "aws_db_instance" "postgres_db" {
   skip_final_snapshot  = true
 }
 
+# Create an EC2 instance to run the data pipeline
+
+# Create a security group for the EC2 instance
+resource "aws_security_group" "ec2_sg" {
+    name        = var.EC2_SECURITY_GROUP_NAME
+    description = "Allow inbound access to the EC2 instance on port 22 for SSH"
+    vpc_id      = var.VPC_ID
+}
+
+# Allow inbound access to the EC2 instance from your current public IP address on port 22 for SSH
+resource "aws_vpc_security_group_ingress_rule" "allow_ssh_from_my_ip" {
+  security_group_id = aws_security_group.ec2_sg.id
+  cidr_ipv4         = "${data.http.my_public_ip.response_body}/32"
+  from_port         = 22
+  ip_protocol       = "tcp"
+  to_port           = 22
+}
+
+# Create an EC2 instance
+resource "aws_instance" "data_pipeline_ec2" {
+  ami           = "ami-07c06c9f04a3f051f" # Ubuntu 22.04 LTS
+  instance_type = "t2.micro"
+  key_name      = aws_key_pair.ec2_key.key_name
+  subnet_id     = var.SUBNET_ID
+  vpc_security_group_ids = [aws_security_group.ec2_sg.id]
+  associate_public_ip_address = true
+  metadata_options {
+    http_tokens   = "required"
+  }
+
+  tags = {
+    Name = var.EC2_INSTANCE_NAME
+  }
+}
+
+
+
+# Generate a .env file with sensitive information
 resource "local_sensitive_file" "env_file" {
-  filename = var.ENV_PATH
-  content  = templatefile(var.ENV_TEMPLATE_PATH, {
+  filename = "${var.BASE_DIR}/.env"
+  content  = templatefile("${var.BASE_DIR}/.env.template", {
     s3_access_key     = var.S3_ACCESS_KEY
     s3_secret_access_key     = var.S3_SECRET_ACCESS_KEY
     s3_bucket_name = var.S3_BUCKET_NAME
@@ -63,5 +134,8 @@ resource "local_sensitive_file" "env_file" {
     rds_username      = aws_db_instance.postgres_db.username
     rds_password      = aws_db_instance.postgres_db.password
     rds_database_name = aws_db_instance.postgres_db.db_name
-  })
+    ec2_key_pair_name = var.EC2_KEY_PAIR_NAME
+    ec2_instance_public_ip = aws_instance.data_pipeline_ec2.public_ip
+    })
+  file_permission = "0600"
 }

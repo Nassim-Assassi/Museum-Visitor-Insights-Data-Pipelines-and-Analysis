@@ -1,18 +1,85 @@
 """Live Kafka consumer for lmnh topic with cleaning, validation, and logging."""
+import argparse
 import json
-import logging
+import time
 from datetime import datetime, timezone
 from os import environ
 from typing import Any
+from uuid import uuid4
 
 from confluent_kafka import Consumer, KafkaError
 from dotenv import load_dotenv
 import pandas as pd
 
 from load import build_kiosk_output_table, get_db_engine, get_db_connection, get_description_button_id_dict, get_value_button_id_dict
+from logging_config import configure_logging, get_logger
+from seed_database import run_seed_database
 
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
+DB_RETRY_SECONDS = 5
+GROUP_ID_FILE = ".kafka_group_id"
+GROUP_ID_PREFIX = "nassim-lmnh-live-consumer"
+
+
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
+    """Parse CLI flags for live pipeline runtime behavior."""
+    parser = argparse.ArgumentParser(
+        description="Run the live kiosk pipeline consumer")
+    parser.add_argument(
+        "--reset_kiosk_output",
+        action="store_true",
+        help="Reset kiosk_output table and rotate Kafka consumer group id",
+    )
+    parser.add_argument(
+        "--reset_db",
+        action="store_true",
+        help="Rebuild entire database and rotate Kafka consumer group id",
+    )
+    return parser.parse_args(argv)
+
+
+def generate_group_id(prefix: str = GROUP_ID_PREFIX) -> str:
+    """Generate a random Kafka consumer group id."""
+    return f"{prefix}-{uuid4().hex[:8]}"
+
+
+def save_group_id(group_id: str, group_id_file: str = GROUP_ID_FILE) -> None:
+    """Persist group id for future runs."""
+    with open(group_id_file, "w", encoding="utf-8") as file:
+        file.write(group_id)
+
+
+def load_saved_group_id(group_id_file: str = GROUP_ID_FILE) -> str | None:
+    """Load saved group id if present and non-empty."""
+    try:
+        with open(group_id_file, "r", encoding="utf-8") as file:
+            saved_group_id = file.read().strip()
+    except FileNotFoundError:
+        return None
+    return saved_group_id or None
+
+
+def create_and_save_group_id(group_id_file: str = GROUP_ID_FILE) -> None:
+    """Generate and persist a new group id."""
+    new_group_id = generate_group_id()
+    save_group_id(new_group_id, group_id_file)
+
+
+def reset_entire_database(config: dict[str, str], conn: Any, engine: Any) -> None:
+    """Drop and recreate all tables by running seed database flow."""
+    logger.info("--reset_db enabled: rebuilding database")
+    run_seed_database(config, conn=conn, engine=engine)
+    logger.info("Database rebuild complete")
+
+
+def reset_kiosk_output_table(conn: Any) -> None:
+    """Clear kiosk_output records and commit the reset transaction."""
+    query = "TRUNCATE TABLE kiosk_output"
+    with conn.cursor() as cur:
+        cur.execute(query)
+    conn.commit()
+    logger.info("kiosk_output table reset complete")
 
 
 def decode_message(message: str | bytes | None) -> dict[str, Any] | None:
@@ -117,47 +184,66 @@ def validate_event(event: Any, exhibit_ids: set) -> bool:
 
     if not validate_event_structure(event):
         logger.warning(
-            f"Skipping message: missing required fields (present fields: {', '.join(list(event.keys()))})")
+            "Skipping message: missing required fields (present fields: %s)",
+            ", ".join(list(event.keys())),
+        )
         return False
 
     if not validate_event_types(event):
         logger.warning(
-            f"Skipping message: invalid field types ({', '.join(f'{k}: {type(v).__name__}' for k, v in event.items())})")
+            "Skipping message: invalid field types (%s)",
+            ", ".join(f"{k}: {type(v).__name__}" for k, v in event.items()),
+        )
         return False
 
     if not validate_event_site_isdigit(event):
         logger.warning(
-            f"Skipping message: 'site' field is not a string of digits (site: {event.get('site')})")
+            "Skipping message: 'site' field is not a string of digits (site: %s)",
+            event.get("site"),
+        )
         return False
 
     if not validate_event_type_relationship(event):
         logger.warning(
-            f"Skipping message: 'type' field is missing or invalid when 'val' is -1 (val: {event.get('val')}, type: {event.get('type')})")
+            "Skipping message: 'type' field is missing or invalid when 'val' is -1 (val: %s, type: %s)",
+            event.get("val"),
+            event.get("type"),
+        )
         return False
 
     if not validate_event_exhibit_in_db(event, exhibit_ids):
         logger.warning(
-            f"Skipping message: 'site' field not found in database (site: {event.get('site')})")
+            "Skipping message: 'site' field not found in database (site: %s)",
+            event.get("site"),
+        )
         return False
 
     if not validate_event_at_timestamp(event):
         logger.warning(
-            f"Skipping message: 'at' field is not a valid timestamp (at: {event.get('at')})")
+            "Skipping message: 'at' field is not a valid timestamp (at: %s)",
+            event.get("at"),
+        )
         return False
 
     if not validate_event_at_ranges(event):
         logger.warning(
-            f"Skipping message: 'at' field out of range (at: {event.get('at')})")
+            "Skipping message: 'at' field out of range (at: %s)",
+            event.get("at"),
+        )
         return False
 
     if not validate_event_val_ranges(event):
         logger.warning(
-            f"Skipping message: 'val' field out of range (val: {event.get('val')})")
+            "Skipping message: 'val' field out of range (val: %s)",
+            event.get("val"),
+        )
         return False
 
     if not validate_event_typ_ranges(event):
         logger.warning(
-            f"Skipping message: 'type' field out of range (type: {event.get('type')})")
+            "Skipping message: 'type' field out of range (type: %s)",
+            event.get("type"),
+        )
         return False
 
     return True
@@ -181,7 +267,7 @@ def create_kafka_consumer(config: dict[str, str], group_id: str) -> Consumer:
         "bootstrap.servers": bootstrap_servers,
         "group.id": group_id,
         "auto.offset.reset": "earliest",
-        "enable.auto.commit": True,
+        "enable.auto.commit": False,
         "security.protocol": security_protocol,
         "sasl.mechanism": sasl_mechanism,
         "sasl.username": sasl_username,
@@ -195,7 +281,11 @@ def create_kafka_consumer(config: dict[str, str], group_id: str) -> Consumer:
     return consumer
 
 
-def consume_batch(consumer: Consumer, batch_size: int, exhibit_ids: set) -> pd.DataFrame:
+def consume_batch(
+    consumer: Consumer,
+    batch_size: int,
+    exhibit_ids: set,
+) -> pd.DataFrame:
     """Consume, clean, and validate messages from lmnh topic."""
     if batch_size <= 0:
         raise ValueError("batch_size must be a positive integer")
@@ -256,43 +346,84 @@ def consume_batch(consumer: Consumer, batch_size: int, exhibit_ids: set) -> pd.D
     return pd.DataFrame(processed_events)
 
 
-def run_and_insert_batch(consumer, batch_size, exhibit_ids, description_button_id_dict, value_button_id_dict, engine) -> None:
+def run_and_insert_batch(
+    consumer,
+    batch_size,
+    exhibit_ids,
+    description_button_id_dict,
+    value_button_id_dict,
+    engine,
+) -> None:
     """Consume a batch of messages and insert them into the database."""
     logger.info("Starting lmnh Kafka consumer batch. batch_size=%s", batch_size)
 
     events = consume_batch(
-        consumer, batch_size=batch_size, exhibit_ids=exhibit_ids)
+        consumer,
+        batch_size=batch_size,
+        exhibit_ids=exhibit_ids,
+    )
 
     kiosk_output_data = build_kiosk_output_table(description_button_id_dict,
                                                  value_button_id_dict, events)
-    kiosk_output_data.to_sql("kiosk_output", engine,
-                             if_exists="append", index=False)
-    logger.info(f"Inserted {len(kiosk_output_data)} kiosk output records")
+
+    while True:
+        try:
+            kiosk_output_data.to_sql(
+                "kiosk_output",
+                engine,
+                if_exists="append",
+                index=False,
+            )
+            break
+        except Exception:
+            logger.error(
+                "DB insert failed; retrying in %s seconds",
+                DB_RETRY_SECONDS,
+            )
+            time.sleep(DB_RETRY_SECONDS)
+
+    # Commit offsets only after DB write succeeds to avoid losing messages.
+    consumer.commit(asynchronous=False)
+    logger.info("Inserted %s kiosk output records", len(kiosk_output_data))
 
 
 if __name__ == "__main__":
+    args = parse_args()
     load_dotenv()
     config: dict[str, str] = dict(environ)
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    )
+    configure_logging()
 
     conn = None
     engine = None
     kafka_consumer = None
+    startup_ok = False
 
     try:
         logger.info("Establishing database connection")
         conn = get_db_connection(config)
         engine = get_db_engine(config)
+
+        if args.reset_db:
+            reset_entire_database(config, conn, engine)
+
+        if args.reset_kiosk_output:
+            logger.info(
+                "--reset_kiosk_output enabled: resetting kiosk_output table")
+            reset_kiosk_output_table(conn)
+
+        group_id = load_saved_group_id()
+        if args.reset_kiosk_output or args.reset_db or group_id is None:
+            create_and_save_group_id()
+            group_id = load_saved_group_id()
+
         kafka_consumer = create_kafka_consumer(
-            config, group_id="nassim-lmnh-live-consumer-new1")
+            config, group_id=group_id)
 
         # Get button ID mappings
         description_button_id_dict = get_description_button_id_dict(conn)
         value_button_id_dict = get_value_button_id_dict(conn)
         exhibit_ids = get_exhibit_ids(conn)
+        startup_ok = True
 
         # Batch process messages from Kafka topic and insert into database
         while True:
@@ -302,18 +433,32 @@ if __name__ == "__main__":
                 exhibit_ids=exhibit_ids,
                 description_button_id_dict=description_button_id_dict,
                 value_button_id_dict=value_button_id_dict,
-                engine=engine
+                engine=engine,
             )
+    except Exception:
+        if startup_ok:
+            logger.error("Batch processing failed. Exiting.")
+        else:
+            logger.error(
+                "Failed to establish startup resources. Check configuration and connectivity. Exiting.")
     finally:
         try:
             if conn is not None:
                 conn.close()
                 logger.info("Database connection closed")
+        except Exception as e:
+            logger.error("Error closing database connection: %s", e)
+
+        try:
             if engine is not None:
                 engine.dispose()
                 logger.info("Database engine disposed")
+        except Exception as e:
+            logger.error("Error disposing database engine: %s", e)
+
+        try:
             if kafka_consumer is not None:
                 kafka_consumer.close()
                 logger.info("Kafka consumer closed")
         except Exception as e:
-            logger.error(f"Error closing database connections: {e}")
+            logger.error("Error closing Kafka consumer: %s", e)

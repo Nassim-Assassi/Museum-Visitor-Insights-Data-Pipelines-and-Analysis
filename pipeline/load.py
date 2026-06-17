@@ -1,13 +1,13 @@
 """Load phase for the museum ETL pipeline."""
 
-import logging
 import os
 
 import pandas as pd
 from psycopg2 import connect
 from sqlalchemy import create_engine
+from logging_config import get_logger
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 # Temporary CSV files created by transform phase
 CLEAN_EXHIBITION_FILE = "clean_exhibition.csv"
@@ -26,8 +26,12 @@ def load_clean_historical_csv() -> pd.DataFrame:
 
 def get_db_engine(config: dict[str, str]):
     """Establish a connection to the PostgreSQL database using SQLAlchemy."""
+    db_url = (
+        f"postgresql://{config.get('DATABASE_USER')}:{config.get('DATABASE_PASSWORD')}"
+        f"@{config.get('DATABASE_HOST')}:{config.get('DATABASE_PORT')}/{config.get('DATABASE_DB')}"
+    )
     return create_engine(
-        f"postgresql://{config.get('DATABASE_USER')}:{config.get('DATABASE_PASSWORD')}@{config.get('DATABASE_HOST')}:{config.get('DATABASE_PORT')}/{config.get('DATABASE_DB')}"
+        db_url
     )
 
 
@@ -59,7 +63,7 @@ def create_schema_tables(conn, schema_path: str = "schema.sql") -> None:
     """Create the required tables in the database using the schema file."""
     try:
         with conn.cursor() as cur:
-            with open(schema_path, "r") as f:
+            with open(schema_path, "r", encoding="utf-8") as f:
                 cur.execute(f.read())
         conn.commit()
     except FileNotFoundError:
@@ -222,7 +226,8 @@ def build_kiosk_output_table(description_button_id_dict: dict, value_button_id_d
     dropped_count = original_count - len(kiosk_output_data)
     if dropped_count > 0:
         logger.warning(
-            f"Dropped {dropped_count} kiosk output records with unmatched button types"
+            "Dropped %s kiosk output records with unmatched button types",
+            dropped_count,
         )
 
     return kiosk_output_data
@@ -247,13 +252,13 @@ def insert_floor_department_and_exhibit(conn, engine, exhibition_data: pd.DataFr
     # Build floor table and insert
     floor_data = build_floor_table(exhibition_data)
     floor_data.to_sql("floor", engine, if_exists="append", index=False)
-    logger.info(f"Inserted {len(floor_data)} floor records")
+    logger.info("Inserted %s floor records", len(floor_data))
 
     # Build department table and insert
     department_data = build_department_table(exhibition_data)
     department_data.to_sql("department", engine,
                            if_exists="append", index=False)
-    logger.info(f"Inserted {len(department_data)} department records")
+    logger.info("Inserted %s department records", len(department_data))
 
     # Get ID mappings from database
     department_id_dict = get_department_id_dict(conn)
@@ -263,7 +268,7 @@ def insert_floor_department_and_exhibit(conn, engine, exhibition_data: pd.DataFr
     exhibit_data = build_exhibit_table(
         department_id_dict, floor_id_dict, exhibition_data)
     exhibit_data.to_sql("exhibit", engine, if_exists="append", index=False)
-    logger.info(f"Inserted {len(exhibit_data)} exhibit records")
+    logger.info("Inserted %s exhibit records", len(exhibit_data))
 
 
 def insert_button_and_kiosk_output(conn, engine, historical_data: pd.DataFrame) -> None:
@@ -272,7 +277,7 @@ def insert_button_and_kiosk_output(conn, engine, historical_data: pd.DataFrame) 
     button_type_data = build_button_type_table()
     button_type_data.to_sql("button_type", engine,
                             if_exists="append", index=False)
-    logger.info(f"Inserted {len(button_type_data)} button type records")
+    logger.info("Inserted %s button type records", len(button_type_data))
 
     # Get button type ID mapping
     button_type_id_dict = get_button_type_id_dict(conn)
@@ -280,7 +285,7 @@ def insert_button_and_kiosk_output(conn, engine, historical_data: pd.DataFrame) 
     # Build and insert button with FK linking
     button_data = build_button_table(button_type_id_dict)
     button_data.to_sql("button", engine, if_exists="append", index=False)
-    logger.info(f"Inserted {len(button_data)} button records")
+    logger.info("Inserted %s button records", len(button_data))
 
     # Get button ID mappings
     description_button_id_dict = get_description_button_id_dict(conn)
@@ -291,7 +296,7 @@ def insert_button_and_kiosk_output(conn, engine, historical_data: pd.DataFrame) 
                                                  value_button_id_dict, historical_data)
     kiosk_output_data.to_sql("kiosk_output", engine,
                              if_exists="append", index=False)
-    logger.info(f"Inserted {len(kiosk_output_data)} kiosk output records")
+    logger.info("Inserted %s kiosk output records", len(kiosk_output_data))
 
 
 def build_and_insert_tables(conn, engine) -> None:

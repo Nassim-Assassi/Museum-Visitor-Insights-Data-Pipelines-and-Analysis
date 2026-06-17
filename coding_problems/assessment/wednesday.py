@@ -59,6 +59,22 @@ def message_to_morse(message: str) -> str:
     join the morse code for each character into a word
     join the morse code for each word into a sentence
     """
+    cleaned_characters = []
+    for character in message.upper():
+        if character.isalnum() or character.isspace():
+            cleaned_characters.append(character)
+
+    cleaned_message = "".join(cleaned_characters)
+    words = cleaned_message.split()
+
+    morse_words = []
+    for word in words:
+        morse_letters = []
+        for character in word:
+            morse_letters.append(reverse_morse_code_dictionary[character])
+        morse_words.append(" ".join(morse_letters))
+
+    return " / ".join(morse_words)
 
 
 if __name__ == "__main__":

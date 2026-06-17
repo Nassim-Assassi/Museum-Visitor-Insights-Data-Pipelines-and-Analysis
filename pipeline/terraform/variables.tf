@@ -83,6 +83,7 @@ variable "DB_PASSWORD" {
 
 variable "DB_USERNAME" {
     type = string
+    sensitive = true
     description = "The username for the DB instance"
 }
 
@@ -93,13 +94,44 @@ variable "DB_NAME" {
     description = "The name of the DB"
 }
 
-variable "ENV_PATH" {
-    type = string
-    description = "The path to the environment configuration"
-}
-
-variable "ENV_TEMPLATE_PATH" {
+variable "EC2_SECURITY_GROUP_NAME" {
     type = string
     sensitive = true
-    description = "The path to the environment template configuration"
+    description = "The name of the EC2 security group"
+}
+
+variable "EC2_INSTANCE_NAME" {
+    type = string
+    sensitive = true
+    description = "The Name tag for the EC2 instance"
+}
+
+variable "EC2_KEY_PAIR_NAME" {
+    type = string
+    sensitive = true
+    description = "The name of the EC2 key pair for SSH access"
+}
+
+variable "SUBNET_ID" {
+    type = string
+    sensitive = true
+    description = "The subnet ID where the EC2 instance will be created"
+}
+
+variable "GITHUB_REPO_URL" {
+    type = string
+    default = ""
+    description = "GitHub repository URL to clone on EC2. Leave empty to skip clone."
+}
+
+variable "GITHUB_BRANCH" {
+    type = string
+    default = "main"
+    description = "Git branch to checkout on EC2 bootstrap"
+}
+
+variable "BASE_DIR" {
+    type = string
+    sensitive = true
+    description = "Base directory where .env, .env.template and generated PEM are located"
 }

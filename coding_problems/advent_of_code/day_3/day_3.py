@@ -51,7 +51,7 @@ def get_submarine_consumption(lines) -> int:
 
 
 def get_oxygen_generator_rating(lines) -> int:
-    for column in len(lines[0]):
+    raise NotImplementedError("get_oxygen_generator_rating is not implemented")
 
 
 if __name__ == "__main__":

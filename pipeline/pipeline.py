@@ -1,5 +1,4 @@
 import argparse
-import logging
 import sys
 from os import environ
 
@@ -8,6 +7,10 @@ from dotenv import load_dotenv
 from extract import clean_up_temp_extract_files, get_s3_client, download_and_format_data_from_s3_bucket
 from transform import run_transform, clean_up_temp_transform_files
 from load import run_load, verify_clean_files_exist, get_db_engine, get_db_connection
+from logging_config import configure_logging, get_logger
+
+
+logger = get_logger(__name__)
 
 
 def parse_arguments():
@@ -59,15 +62,9 @@ if __name__ == "__main__":
 
     args = parse_arguments()
 
-    logging.basicConfig(
-        level=logging.DEBUG if args.verbose else logging.INFO,
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S",
-        handlers=[logging.StreamHandler(sys.stdout)]
-    )
-    logger = logging.getLogger(__name__)
+    configure_logging(verbose=args.verbose)
 
-    logger.info(f"Pipeline started with arguments: {args}")
+    logger.info("Pipeline started with arguments: %s", args)
 
     # Determine which phases to run
     # Extract and load without transform is not a valid combination, since transform is needed to produce the cleaned files for load
@@ -99,7 +96,7 @@ if __name__ == "__main__":
         # Extract phase
         if args.extract:
             logger.info(
-                f"Starting extraction phase from bucket: {args.bucket}...")
+                "Starting extraction phase from bucket: %s...", args.bucket)
             try:
                 s3_client = get_s3_client(config)
                 logger.info("S3 client initialized")
@@ -108,7 +105,7 @@ if __name__ == "__main__":
                 logger.info("Data download and formatting completed")
 
             except Exception as e:
-                logger.error(f"Error in extract module: {e}")
+                logger.error("Error in extract module: %s", e)
                 sys.exit(1)
 
         # Transform phase
@@ -118,7 +115,7 @@ if __name__ == "__main__":
                 run_transform()
                 logger.info("Transformation phase completed")
             except Exception as e:
-                logger.error(f"Error in transform module: {e}")
+                logger.error("Error in transform module: %s", e)
                 sys.exit(1)
 
         # Load phase
@@ -135,7 +132,7 @@ if __name__ == "__main__":
                 logger.info("Load phase completed")
 
             except Exception as e:
-                logger.error(f"Error in load module: {e}")
+                logger.error("Error in load module: %s", e)
                 sys.exit(1)
 
         # Cleanup phase
@@ -147,13 +144,13 @@ if __name__ == "__main__":
                 clean_up_temp_transform_files()
                 logger.info("Temporary transformed files cleaned up")
         except Exception as e:
-            logger.error(f"Error cleaning up temporary files: {e}")
+            logger.error("Error cleaning up temporary files: %s", e)
             sys.exit(1)
 
         logger.info("Pipeline completed successfully")
 
     except Exception as e:
-        logger.error(f"Pipeline failed: {e}")
+        logger.error("Pipeline failed: %s", e)
         sys.exit(1)
     finally:
         try:
@@ -164,4 +161,4 @@ if __name__ == "__main__":
                 engine.dispose()
                 logger.info("Database engine disposed")
         except Exception as e:
-            logger.error(f"Error closing database connections: {e}")
+            logger.error("Error closing database connections: %s", e)

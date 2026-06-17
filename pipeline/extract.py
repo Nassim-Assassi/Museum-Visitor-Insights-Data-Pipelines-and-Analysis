@@ -1,4 +1,3 @@
-import logging
 import os
 
 import json
@@ -6,8 +5,9 @@ from botocore.exceptions import ClientError
 from boto3 import client
 
 import pandas as pd
+from logging_config import get_logger
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 def get_s3_client(config: dict[str, str]) -> client:
@@ -34,7 +34,10 @@ def extract_s3_bucket_object_names(bucket_name: str, s3_client: client, prefix: 
         [obj["Key"] for obj in contents if obj["Key"].endswith(suffix)]
     )
     logger.debug(
-        f"Found {len(object_names)} objects in bucket {bucket_name} with suffix {suffix}"
+        "Found %s objects in bucket %s with suffix %s",
+        len(object_names),
+        bucket_name,
+        suffix,
     )
     return object_names
 
@@ -44,7 +47,10 @@ def extract_object_from_S3_bucket(bucket_name: str, file_name: str, s3_client: c
     s3_client.download_file(bucket_name, file_name,
                             f"{save_dir}/{file_name}")
     logger.debug(
-        f"Downloaded {file_name} from bucket {bucket_name} to {save_dir}"
+        "Downloaded %s from bucket %s to %s",
+        file_name,
+        bucket_name,
+        save_dir,
     )
 
 
@@ -64,15 +70,17 @@ def download_data_from_s3_with_suffix(s3_client: client, bucket_name: str = "sig
 
 def combine_csv_files(file_names: list[str], output_file_name: str) -> None:
     """Combines multiple CSV files into a single CSV file."""
-    with open(output_file_name, "w") as output_file:
+    with open(output_file_name, "w", encoding="utf-8") as output_file:
         for i, file_name in enumerate(file_names):
-            with open(file_name, "r") as input_file:
+            with open(file_name, "r", encoding="utf-8") as input_file:
                 if i != 0:
                     # Skip the header row for all but the first file
                     next(input_file)
                 output_file.write(input_file.read())
     logger.info(
-        f"Combined {len(file_names)} CSV files into {output_file_name}"
+        "Combined %s CSV files into %s",
+        len(file_names),
+        output_file_name,
     )
 
 
@@ -81,21 +89,21 @@ def delete_local_files(file_names: list[str]) -> None:
     for file_name in file_names:
         try:
             os.remove(file_name)
-            logger.debug(f"Deleted file {file_name}")
+            logger.debug("Deleted file %s", file_name)
         except FileNotFoundError:
-            logger.warning(f"File not found, skipping deletion: {file_name}")
+            logger.warning("File not found, skipping deletion: %s", file_name)
         except OSError as e:
-            logger.error(f"Error deleting file {file_name}: {e}")
+            logger.error("Error deleting file %s: %s", file_name, e)
 
 
 def json_files_to_list(file_names: list[str]) -> list[dict]:
     """Reads JSON files and returns their contents as a list of dictionaries."""
     data = []
     for file_name in file_names:
-        with open(file_name, "r") as f:
+        with open(file_name, "r", encoding="utf-8") as f:
             data.append(json.load(f))
-        logger.debug(f"Loaded JSON from {file_name}")
-    logger.info(f"Loaded {len(file_names)} JSON files")
+        logger.debug("Loaded JSON from %s", file_name)
+    logger.info("Loaded %s JSON files", len(file_names))
     return data
 
 
@@ -104,7 +112,9 @@ def convert_list_of_dicts_to_csv(data: list[dict], output_file_name: str) -> Non
     df = pd.DataFrame(data)
     df.to_csv(output_file_name, index=False)
     logger.info(
-        f"Converted {len(data)} JSON records to CSV file {output_file_name}"
+        "Converted %s JSON records to CSV file %s",
+        len(data),
+        output_file_name,
     )
 
 

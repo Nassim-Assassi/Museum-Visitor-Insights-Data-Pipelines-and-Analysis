@@ -1,11 +1,11 @@
 """Transform phase for the museum ETL pipeline."""
 
-import logging
 import os
 
 import pandas as pd
+from logging_config import get_logger
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 def load_exhibition_csv():
@@ -49,14 +49,15 @@ def validate_raw_exhibition_data(exhibition_data: pd.DataFrame) -> pd.DataFrame:
     dropped_count = original_count - len(exhibition_data)
     if dropped_count > 0:
         logger.warning(
-            f"Dropped {dropped_count} exhibition rows with null values in required columns"
+            "Dropped %s exhibition rows with null values in required columns",
+            dropped_count,
         )
 
     if len(exhibition_data) == 0:
         raise ValueError("Exhibition data is empty after validation")
 
     logger.info(
-        f"Exhibition data validated: {len(exhibition_data)} valid records")
+        "Exhibition data validated: %s valid records", len(exhibition_data))
     return exhibition_data
 
 
@@ -91,7 +92,9 @@ def validate_raw_historical_data(historical_data: pd.DataFrame) -> pd.DataFrame:
     invalid_val_count = invalid_val_mask.sum()
     if invalid_val_count > 0:
         logger.warning(
-            f"Dropping {invalid_val_count} historical records with invalid 'val' outside {valid_vals}"
+            "Dropping %s historical records with invalid 'val' outside %s",
+            invalid_val_count,
+            valid_vals,
         )
         historical_data = historical_data[~invalid_val_mask]
 
@@ -102,21 +105,23 @@ def validate_raw_historical_data(historical_data: pd.DataFrame) -> pd.DataFrame:
     invalid_at_count = invalid_at_mask.sum()
     if invalid_at_count > 0:
         logger.warning(
-            f"Dropping {invalid_at_count} historical records with unparseable timestamps"
+            "Dropping %s historical records with unparseable timestamps",
+            invalid_at_count,
         )
         historical_data = historical_data[~invalid_at_mask]
 
     total_dropped = original_count - len(historical_data)
     if total_dropped > 0:
         logger.warning(
-            f"Dropped {total_dropped} historical records during validation"
+            "Dropped %s historical records during validation",
+            total_dropped,
         )
 
     if len(historical_data) == 0:
         raise ValueError("Historical data is empty after validation")
 
     logger.info(
-        f"Historical data validated: {len(historical_data)} valid records")
+        "Historical data validated: %s valid records", len(historical_data))
     return historical_data
 
 
@@ -133,14 +138,16 @@ def convert_exhibition_id_to_int(exhibition_data: pd.DataFrame) -> None:
         nan_count = exhibition_data["EXHIBITION_ID"].isna().sum()
         if nan_count > 0:
             logger.warning(
-                f"{nan_count} invalid exhibition IDs present in data, dropping those rows"
+                "%s invalid exhibition IDs present in data, dropping those rows",
+                nan_count,
             )
             exhibition_data.dropna(subset=["EXHIBITION_ID"], inplace=True)
             logger.info(
-                f"Retained {len(exhibition_data)} exhibition records after ID conversion"
+                "Retained %s exhibition records after ID conversion",
+                len(exhibition_data),
             )
     except Exception as e:
-        logger.error(f"Error converting exhibition IDs: {str(e)}")
+        logger.error("Error converting exhibition IDs: %s", e)
         raise
 
 
@@ -158,14 +165,16 @@ def convert_start_date_to_date(exhibition_data: pd.DataFrame) -> None:
         nan_count = exhibition_data["START_DATE"].isna().sum()
         if nan_count > 0:
             logger.warning(
-                f"Failed to parse {nan_count} start dates, dropping those rows"
+                "Failed to parse %s start dates, dropping those rows",
+                nan_count,
             )
             exhibition_data.dropna(subset=["START_DATE"], inplace=True)
             logger.info(
-                f"Retained {len(exhibition_data)} exhibition records after date conversion"
+                "Retained %s exhibition records after date conversion",
+                len(exhibition_data),
             )
     except Exception as e:
-        logger.error(f"Error converting start dates: {str(e)}")
+        logger.error("Error converting start dates: %s", e)
         raise
 
 
@@ -227,9 +236,9 @@ def clean_up_temp_transform_files() -> None:
     for file_name in ["clean_exhibition.csv", "clean_historical.csv"]:
         try:
             os.remove(file_name)
-            logger.debug(f"Deleted temporary file {file_name}")
+            logger.debug("Deleted temporary file %s", file_name)
         except FileNotFoundError:
             logger.debug(
-                f"Temporary file {file_name} not found, skipping deletion")
+                "Temporary file %s not found, skipping deletion", file_name)
         except Exception as e:
-            logger.error(f"Error deleting temporary file {file_name}: {e}")
+            logger.error("Error deleting temporary file %s: %s", file_name, e)
