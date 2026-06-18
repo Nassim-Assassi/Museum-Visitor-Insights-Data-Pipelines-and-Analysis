@@ -3,152 +3,216 @@
   {
    "file_name": "./coding_problems/assessment/wednesday.py",
    "errors": [
-    "pipeline/seed_database.py:8:0: C0301: Line too long (170/150) (line-too-long)",
-    "pipeline/seed_database.py:9:0: C0301: Line too long (295/150) (line-too-long)",
-    "pipeline/seed_database.py:13:0: C0103: Function name \"download_and_format_exhibition_data_from_s3_bucket\" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)",
-    "pipeline/seed_database.py:13:55: C0103: Argument name \"s3_client\" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<UPPER_CASE>[A-Z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)",
-    "pipeline/seed_database.py:36:8: W0707: Consider explicitly re-raising using 'raise Exception(f'Error deleting temporary file exhibition_data.csv: {e}') from e' (raise-missing-from)",
-    "pipeline/seed_database.py:47:8: W0707: Consider explicitly re-raising using 'raise Exception(f'Error deleting temporary file clean_exhibition.csv: {e}') from e' (raise-missing-from)",
-    "pipeline/seed_database.py:59:4: E0606: Possibly using variable 'logger' before assignment (possibly-used-before-assignment)",
-    "pipeline/seed_database.py:70:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/seed_database.py:76:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/seed_database.py:86:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/seed_database.py:92:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/seed_database.py:100:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/seed_database.py:120:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/seed_database.py:131:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/seed_database.py:142:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/seed_database.py:161:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/seed_database.py:172:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/seed_database.py:178:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/seed_database.py:189:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)"
+    "pipeline/test_pipeline_script.py:6:0: W0612: Unused variable 'TestParseArguments' (unused-variable)"
    ],
-   "score": 79.5
+   "score": 94.4
+  },
+  {
+   "file_name": "./pipeline/test_logging_config.py",
+   "errors": [
+    "pipeline/test_logging_config.py:7:0: W0612: Unused variable 'TestGetLogger' (unused-variable)",
+    "pipeline/test_logging_config.py:19:0: W0612: Unused variable 'TestConfigureLogging' (unused-variable)"
+   ],
+   "score": 89.5
+  },
+  {
+   "file_name": "./pipeline/test_live_pipeline.py",
+   "errors": [
+    "pipeline/test_live_pipeline.py:11:0: W0612: Unused variable 'TestDecodeMessage' (unused-variable)",
+    "pipeline/test_live_pipeline.py:31:0: W0612: Unused variable 'TestValidateEventHelpers' (unused-variable)",
+    "pipeline/test_live_pipeline.py:103:0: W0612: Unused variable 'TestValidateEvent' (unused-variable)",
+    "pipeline/test_live_pipeline.py:125:0: W0612: Unused variable 'TestCreateKafkaConsumer' (unused-variable)",
+    "pipeline/test_live_pipeline.py:156:0: W0612: Unused variable 'TestConsumeBatch' (unused-variable)",
+    "pipeline/test_live_pipeline.py:185:0: W0612: Unused variable 'TestRunAndInsertBatch' (unused-variable)",
+    "pipeline/test_live_pipeline.py:213:0: W0612: Unused variable 'TestGroupIdPersistence' (unused-variable)",
+    "pipeline/test_live_pipeline.py:255:0: W0612: Unused variable 'TestResetKioskOutput' (unused-variable)"
+   ],
+   "score": 93.1
+  },
+  {
+   "file_name": "./pipeline/seed_database.py",
+   "errors": [
+    "pipeline/seed_database.py:77:8: W0707: Consider explicitly re-raising using 'raise Exception(f'Error deleting temporary file exhibition_data.csv: {e}') from e' (raise-missing-from)",
+    "pipeline/seed_database.py:77:8: W0719: Raising too general exception: Exception (broad-exception-raised)",
+    "pipeline/seed_database.py:88:8: W0707: Consider explicitly re-raising using 'raise Exception(f'Error deleting temporary file clean_exhibition.csv: {e}') from e' (raise-missing-from)",
+    "pipeline/seed_database.py:88:8: W0719: Raising too general exception: Exception (broad-exception-raised)",
+    "pipeline/seed_database.py:156:11: W0718: Catching too general exception Exception (broad-exception-caught)",
+    "pipeline/seed_database.py:167:15: W0718: Catching too general exception Exception (broad-exception-caught)"
+   ],
+   "score": 93.9
+  },
+  {
+   "file_name": "./pipeline/test_transform.py",
+   "errors": [
+    "pipeline/test_transform.py:8:0: W0612: Unused variable 'TestLoadExhibitionCsv' (unused-variable)",
+    "pipeline/test_transform.py:21:0: W0612: Unused variable 'TestValidateRawExhibitionData' (unused-variable)",
+    "pipeline/test_transform.py:51:0: W0612: Unused variable 'TestValidateRawHistoricalData' (unused-variable)",
+    "pipeline/test_transform.py:71:0: W0612: Unused variable 'TestConvertExhibitionIdToInt' (unused-variable)",
+    "pipeline/test_transform.py:83:0: W0612: Unused variable 'TestConvertStartDateToDate' (unused-variable)",
+    "pipeline/test_transform.py:95:0: W0612: Unused variable 'TestCleanExhibitionData' (unused-variable)",
+    "pipeline/test_transform.py:115:0: W0612: Unused variable 'TestEnsureExtractedFilesExist' (unused-variable)",
+    "pipeline/test_transform.py:126:0: W0612: Unused variable 'TestRunTransform' (unused-variable)",
+    "pipeline/test_transform.py:165:0: W0612: Unused variable 'TestCleanUpTempTransformFiles' (unused-variable)"
+   ],
+   "score": 87.8
+  },
+  {
+   "file_name": "./pipeline/test_extract.py",
+   "errors": [
+    "pipeline/test_extract.py:11:0: W0612: Unused variable 'TestGetS3Client' (unused-variable)",
+    "pipeline/test_extract.py:28:0: W0612: Unused variable 'TestExtractS3BucketObjectNames' (unused-variable)",
+    "pipeline/test_extract.py:51:0: W0612: Unused variable 'TestExtractObjectFromS3Bucket' (unused-variable)",
+    "pipeline/test_extract.py:64:0: W0612: Unused variable 'TestCombineCsvFiles' (unused-variable)",
+    "pipeline/test_extract.py:80:0: W0612: Unused variable 'TestDeleteLocalFiles' (unused-variable)",
+    "pipeline/test_extract.py:94:0: W0612: Unused variable 'TestJsonFilesToList' (unused-variable)",
+    "pipeline/test_extract.py:109:0: W0612: Unused variable 'TestConvertListOfDictsToCsv' (unused-variable)",
+    "pipeline/test_extract.py:122:0: W0612: Unused variable 'TestDownloadAndFormatDataFromS3Bucket' (unused-variable)",
+    "pipeline/test_extract.py:141:0: W0612: Unused variable 'TestCleanUpTempExtractFiles' (unused-variable)"
+   ],
+   "score": 88.2
+  },
+  {
+   "file_name": "./pipeline/logging_config.py",
+   "errors": [
+    "pipeline/logging_config.py:7:0: W0612: Unused variable 'configure_logging' (unused-variable)",
+    "pipeline/logging_config.py:17:0: W0612: Unused variable 'get_logger' (unused-variable)"
+   ],
+   "score": 66.7
   },
   {
    "file_name": "./pipeline/extract.py",
    "errors": [
-    "pipeline/extract.py:13:0: C0103: Function name \"get_s3_client\" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)",
-    "pipeline/extract.py:15:4: C0103: Variable name \"s3_client\" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)",
-    "pipeline/extract.py:23:0: C0103: Function name \"extract_s3_bucket_object_names\" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)",
-    "pipeline/extract.py:23:53: C0103: Argument name \"s3_client\" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<UPPER_CASE>[A-Z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)",
-    "pipeline/extract.py:36:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/extract.py:42:0: C0103: Function name \"extract_object_from_S3_bucket\" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)",
-    "pipeline/extract.py:42:68: C0103: Argument name \"s3_client\" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<UPPER_CASE>[A-Z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)",
-    "pipeline/extract.py:46:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/extract.py:51:0: C0103: Function name \"extract_objects_from_S3_bucket\" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)",
-    "pipeline/extract.py:51:35: C0103: Argument name \"s3_client\" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<UPPER_CASE>[A-Z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)",
-    "pipeline/extract.py:58:0: C0103: Function name \"download_data_from_s3_with_suffix\" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)",
-    "pipeline/extract.py:58:38: C0103: Argument name \"s3_client\" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<UPPER_CASE>[A-Z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)",
-    "pipeline/extract.py:67:9: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)",
-    "pipeline/extract.py:69:17: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)",
-    "pipeline/extract.py:74:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/extract.py:84:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/extract.py:86:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/extract.py:88:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/extract.py:95:13: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)",
-    "pipeline/extract.py:97:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/extract.py:98:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/extract.py:106:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/extract.py:111:29: C0103: Argument name \"s3_client\" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<UPPER_CASE>[A-Z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)",
-    "pipeline/extract.py:124:29: C0103: Argument name \"s3_client\" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<UPPER_CASE>[A-Z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)",
-    "pipeline/extract.py:137:0: C0103: Function name \"download_and_format_data_from_s3_bucket\" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)",
-    "pipeline/extract.py:137:44: C0103: Argument name \"s3_client\" doesn't conform to '(?:(?P<snake_case>[a-z_]+)|(?P<UPPER_CASE>[A-Z_]+)|(?P<PascalCase>[^a-z][A-Za-z]+)|(?P<camelCase>[^A-Z][A-Za-z]+))$' pattern (invalid-name)",
-    "pipeline/extract.py:148:21: R6102: Consider using an in-place tuple instead of list (consider-using-tuple)",
+    "pipeline/extract.py:29:7: R6103: Use 'if (contents := response.get('Contents')) is None:' instead (consider-using-assignment-expr)",
+    "pipeline/extract.py:45:0: C0103: Function name \"extract_object_from_S3_bucket\" doesn't conform to '(?:(?P<snake_case>[a-z_][a-z0-9_]*)|(?P<PascalCase>[^a-z][A-Za-z0-9]+)|(?P<camelCase>[^A-Z][A-Za-z0-9]+))$' pattern (invalid-name)",
+    "pipeline/extract.py:57:0: C0103: Function name \"extract_objects_from_S3_bucket\" doesn't conform to '(?:(?P<snake_case>[a-z_][a-z0-9_]*)|(?P<PascalCase>[^a-z][A-Za-z0-9]+)|(?P<camelCase>[^A-Z][A-Za-z0-9]+))$' pattern (invalid-name)",
+    "pipeline/extract.py:158:21: R6102: Consider using an in-place tuple instead of list (consider-using-tuple)",
     "pipeline/extract.py:13:0: W0612: Unused variable 'get_s3_client' (unused-variable)",
-    "pipeline/extract.py:137:0: W0612: Unused variable 'download_and_format_data_from_s3_bucket' (unused-variable)",
-    "pipeline/extract.py:146:0: W0612: Unused variable 'clean_up_temp_extract_files' (unused-variable)",
-    "pipeline/extract.py:5:0: W0612: Unused variable 'ClientError' (unused-variable)",
-    "pipeline/extract.py:5:0: W0611: Unused ClientError imported from botocore.exceptions (unused-import)"
+    "pipeline/extract.py:147:0: W0612: Unused variable 'download_and_format_data_from_s3_bucket' (unused-variable)",
+    "pipeline/extract.py:156:0: W0612: Unused variable 'clean_up_temp_extract_files' (unused-variable)",
+    "pipeline/extract.py:4:0: W0612: Unused variable 'ClientError' (unused-variable)",
+    "pipeline/extract.py:4:0: W0611: Unused ClientError imported from botocore.exceptions (unused-import)"
    ],
-   "score": 57.9
+   "score": 88.2
+  },
+  {
+   "file_name": "./pipeline/test_load.py",
+   "errors": [
+    "pipeline/test_load.py:9:0: W0612: Unused variable 'TestLoadCleanCsvFunctions' (unused-variable)",
+    "pipeline/test_load.py:27:0: W0612: Unused variable 'TestGetDbEngine' (unused-variable)",
+    "pipeline/test_load.py:48:0: W0612: Unused variable 'TestGetDbConnection' (unused-variable)",
+    "pipeline/test_load.py:70:0: W0612: Unused variable 'TestGetIdDictHelpers' (unused-variable)",
+    "pipeline/test_load.py:122:0: W0612: Unused variable 'TestBuildFloorTable' (unused-variable)",
+    "pipeline/test_load.py:135:0: W0612: Unused variable 'TestBuildDepartmentTable' (unused-variable)",
+    "pipeline/test_load.py:147:0: W0612: Unused variable 'TestBuildButtonTypeTable' (unused-variable)",
+    "pipeline/test_load.py:156:0: W0612: Unused variable 'TestBuildExhibitTable' (unused-variable)",
+    "pipeline/test_load.py:178:0: W0612: Unused variable 'TestMapRowToButtonId' (unused-variable)",
+    "pipeline/test_load.py:228:0: W0612: Unused variable 'TestBuildKioskOutputTable' (unused-variable)",
+    "pipeline/test_load.py:249:0: W0612: Unused variable 'TestVerifyCleanFilesExist' (unused-variable)",
+    "pipeline/test_load.py:260:0: W0612: Unused variable 'TestRunLoad' (unused-variable)"
+   ],
+   "score": 89.8
   },
   {
    "file_name": "./pipeline/load.py",
    "errors": [
-    "pipeline/load.py:30:0: C0301: Line too long (175/150) (line-too-long)",
-    "pipeline/load.py:53:4: W0612: Unused variable 'e' (unused-variable)",
-    "pipeline/load.py:62:17: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)",
-    "pipeline/load.py:67:4: W0612: Unused variable 'e' (unused-variable)",
-    "pipeline/load.py:183:56: R6201: Consider using set for membership test (use-set-for-membership)",
-    "pipeline/load.py:187:83: E1131: unsupported operand type(s) for | (unsupported-binary-operation)",
-    "pipeline/load.py:224:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/load.py:250:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/load.py:256:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/load.py:266:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/load.py:275:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/load.py:283:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/load.py:294:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/load.py:319:0: W9016: \"conn, engine\" missing in parameter type documentation (missing-type-doc)",
+    "pipeline/load.py:57:4: W0612: Unused variable 'e' (unused-variable)",
+    "pipeline/load.py:71:4: W0612: Unused variable 'e' (unused-variable)",
+    "pipeline/load.py:187:56: R6201: Consider using set for membership test (use-set-for-membership)",
+    "pipeline/load.py:227:7: R6103: Use 'if (dropped_count := original_count - len(kiosk_output_data)) > 0:' instead (consider-using-assignment-expr)",
+    "pipeline/load.py:243:7: R6103: Use 'if (missing := [f for f in required_files if not os.path.exists(f)]):' instead (consider-using-assignment-expr)",
+    "pipeline/load.py:324:0: W9016: \"conn, engine\" missing in parameter type documentation (missing-type-doc)",
     "pipeline/load.py:27:0: W0612: Unused variable 'get_db_engine' (unused-variable)",
-    "pipeline/load.py:34:0: W0612: Unused variable 'get_db_connection' (unused-variable)",
-    "pipeline/load.py:319:0: W0612: Unused variable 'run_load' (unused-variable)"
+    "pipeline/load.py:38:0: W0612: Unused variable 'get_db_connection' (unused-variable)",
+    "pipeline/load.py:324:0: W0612: Unused variable 'run_load' (unused-variable)"
    ],
-   "score": 87.0
+   "score": 94.4
   },
   {
    "file_name": "./pipeline/pipeline.py",
    "errors": [
-    "pipeline/pipeline.py:70:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/pipeline.py:101:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/pipeline.py:111:16: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/pipeline.py:121:16: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/pipeline.py:138:16: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/pipeline.py:150:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/pipeline.py:156:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/pipeline.py:167:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)"
+    "pipeline/pipeline.py:152:11: W0718: Catching too general exception Exception (broad-exception-caught)",
+    "pipeline/pipeline.py:107:19: W0718: Catching too general exception Exception (broad-exception-caught)",
+    "pipeline/pipeline.py:117:19: W0718: Catching too general exception Exception (broad-exception-caught)",
+    "pipeline/pipeline.py:134:19: W0718: Catching too general exception Exception (broad-exception-caught)",
+    "pipeline/pipeline.py:146:15: W0718: Catching too general exception Exception (broad-exception-caught)",
+    "pipeline/pipeline.py:163:15: W0718: Catching too general exception Exception (broad-exception-caught)"
    ],
-   "score": 91.5
+   "score": 93.6
+  },
+  {
+   "file_name": "./pipeline/conftest.py",
+   "errors": [
+    "pipeline/conftest.py:9:0: W0613: Unused argument 'args' (unused-argument)",
+    "pipeline/conftest.py:9:0: W0613: Unused argument 'kwargs' (unused-argument)",
+    "pipeline/conftest.py:13:0: W0613: Unused argument 'kwargs' (unused-argument)",
+    "pipeline/conftest.py:17:0: W0613: Unused argument 'args' (unused-argument)",
+    "pipeline/conftest.py:17:0: W0613: Unused argument 'kwargs' (unused-argument)",
+    "pipeline/conftest.py:43:30: W0613: Unused argument 'Bucket' (unused-argument)",
+    "pipeline/conftest.py:43:38: W0613: Unused argument 'Prefix' (unused-argument)",
+    "pipeline/conftest.py:54:30: W0613: Unused argument 'Bucket' (unused-argument)",
+    "pipeline/conftest.py:54:38: W0613: Unused argument 'Prefix' (unused-argument)",
+    "pipeline/conftest.py:43:30: C0103: Argument name \"Bucket\" doesn't conform to the `snake_case` group in the '(?:(?P<snake_case>[a-z_][a-z0-9_]*)|(?P<UPPER_CASE>[A-Z_][A-Z0-9_]*)|(?P<PascalCase>[^a-z][A-Za-z0-9]+)|(?P<camelCase>[^A-Z][A-Za-z0-9]+))$' pattern (invalid-name)",
+    "pipeline/conftest.py:43:38: C0103: Argument name \"Prefix\" doesn't conform to the `snake_case` group in the '(?:(?P<snake_case>[a-z_][a-z0-9_]*)|(?P<UPPER_CASE>[A-Z_][A-Z0-9_]*)|(?P<PascalCase>[^a-z][A-Za-z0-9]+)|(?P<camelCase>[^A-Z][A-Za-z0-9]+))$' pattern (invalid-name)",
+    "pipeline/conftest.py:54:30: C0103: Argument name \"Bucket\" doesn't conform to the `snake_case` group in the '(?:(?P<snake_case>[a-z_][a-z0-9_]*)|(?P<UPPER_CASE>[A-Z_][A-Z0-9_]*)|(?P<PascalCase>[^a-z][A-Za-z0-9]+)|(?P<camelCase>[^A-Z][A-Za-z0-9]+))$' pattern (invalid-name)",
+    "pipeline/conftest.py:54:38: C0103: Argument name \"Prefix\" doesn't conform to the `snake_case` group in the '(?:(?P<snake_case>[a-z_][a-z0-9_]*)|(?P<UPPER_CASE>[A-Z_][A-Z0-9_]*)|(?P<PascalCase>[^a-z][A-Za-z0-9]+)|(?P<camelCase>[^A-Z][A-Za-z0-9]+))$' pattern (invalid-name)",
+    "pipeline/conftest.py:42:0: W0612: Unused variable 'S3ListWithContents' (unused-variable)",
+    "pipeline/conftest.py:53:0: W0612: Unused variable 'S3ListEmpty' (unused-variable)",
+    "pipeline/conftest.py:58:0: W0612: Unused variable 'S3Downloader' (unused-variable)",
+    "pipeline/conftest.py:84:0: W0612: Unused variable 'DummyConn' (unused-variable)",
+    "pipeline/conftest.py:100:0: W0612: Unused variable 'FakeConsumerForConfig' (unused-variable)",
+    "pipeline/conftest.py:109:0: W0612: Unused variable 'FakeMessage' (unused-variable)",
+    "pipeline/conftest.py:126:0: W0612: Unused variable 'FakePollingConsumer' (unused-variable)"
+   ],
+   "score": 75.9
   },
   {
    "file_name": "./pipeline/transform.py",
    "errors": [
-    "pipeline/transform.py:51:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/transform.py:58:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/transform.py:93:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/transform.py:104:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/transform.py:111:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/transform.py:118:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/transform.py:135:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/transform.py:139:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/transform.py:143:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/transform.py:160:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/transform.py:164:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/transform.py:168:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/transform.py:153:8: W0612: Unused variable 'original_count' (unused-variable)",
-    "pipeline/transform.py:183:21: R6102: Consider using an in-place tuple instead of list (consider-using-tuple)",
-    "pipeline/transform.py:227:21: R6102: Consider using an in-place tuple instead of list (consider-using-tuple)",
-    "pipeline/transform.py:230:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/transform.py:232:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/transform.py:235:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/transform.py:195:0: W0612: Unused variable 'run_transform' (unused-variable)",
-    "pipeline/transform.py:225:0: W0612: Unused variable 'clean_up_temp_transform_files' (unused-variable)"
+    "pipeline/transform.py:50:7: R6103: Use 'if (dropped_count := original_count - len(exhibition_data)) > 0:' instead (consider-using-assignment-expr)",
+    "pipeline/transform.py:93:7: R6103: Use 'if (invalid_val_count := invalid_val_mask.sum()) > 0:' instead (consider-using-assignment-expr)",
+    "pipeline/transform.py:106:7: R6103: Use 'if (invalid_at_count := invalid_at_mask.sum()) > 0:' instead (consider-using-assignment-expr)",
+    "pipeline/transform.py:114:7: R6103: Use 'if (total_dropped := original_count - len(historical_data)) > 0:' instead (consider-using-assignment-expr)",
+    "pipeline/transform.py:139:11: R6103: Use 'if (nan_count := exhibition_data['EXHIBITION_ID'].isna().sum()) > 0:' instead (consider-using-assignment-expr)",
+    "pipeline/transform.py:166:11: R6103: Use 'if (nan_count := exhibition_data['START_DATE'].isna().sum()) > 0:' instead (consider-using-assignment-expr)",
+    "pipeline/transform.py:160:8: W0612: Unused variable 'original_count' (unused-variable)",
+    "pipeline/transform.py:192:21: R6102: Consider using an in-place tuple instead of list (consider-using-tuple)",
+    "pipeline/transform.py:236:21: R6102: Consider using an in-place tuple instead of list (consider-using-tuple)",
+    "pipeline/transform.py:243:15: W0718: Catching too general exception Exception (broad-exception-caught)",
+    "pipeline/transform.py:204:0: W0612: Unused variable 'run_transform' (unused-variable)",
+    "pipeline/transform.py:234:0: W0612: Unused variable 'clean_up_temp_transform_files' (unused-variable)"
    ],
-   "score": 80.6
+   "score": 88.3
+  },
+  {
+   "file_name": "./pipeline/test_seed_database.py",
+   "errors": [
+    "pipeline/test_seed_database.py:1:0: W0612: Unused variable 'os' (unused-variable)",
+    "pipeline/test_seed_database.py:5:0: W0612: Unused variable 'pytest' (unused-variable)",
+    "pipeline/test_seed_database.py:10:0: W0612: Unused variable 'TestDownloadAndFormatExhibitionDataFromS3Bucket' (unused-variable)",
+    "pipeline/test_seed_database.py:40:0: W0612: Unused variable 'TestCleanupTempFiles' (unused-variable)",
+    "pipeline/test_seed_database.py:66:0: W0612: Unused variable 'TestGenerateSeedData' (unused-variable)",
+    "pipeline/test_seed_database.py:88:0: W0612: Unused variable 'TestBuildAndInsertSeedTables' (unused-variable)",
+    "pipeline/test_seed_database.py:1:0: W0611: Unused import os (unused-import)",
+    "pipeline/test_seed_database.py:5:0: W0611: Unused import pytest (unused-import)"
+   ],
+   "score": 86.9
   },
   {
    "file_name": "./pipeline/live_pipeline.py",
    "errors": [
-    "pipeline/live_pipeline.py:18:28: E1131: unsupported operand type(s) for | (unsupported-binary-operation)",
-    "pipeline/live_pipeline.py:18:51: E1131: unsupported operand type(s) for | (unsupported-binary-operation)",
-    "pipeline/live_pipeline.py:105:16: R1716: Simplify chained comparison between the operands (chained-comparison)",
-    "pipeline/live_pipeline.py:119:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/live_pipeline.py:124:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/live_pipeline.py:129:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/live_pipeline.py:134:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/live_pipeline.py:139:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/live_pipeline.py:144:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/live_pipeline.py:149:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/live_pipeline.py:154:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/live_pipeline.py:159:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/live_pipeline.py:259:0: R0917: Too many positional arguments (6/5) (too-many-positional-arguments)",
-    "pipeline/live_pipeline.py:270:4: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/live_pipeline.py:319:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)",
-    "pipeline/live_pipeline.py:8:0: W0612: Unused variable 'KafkaError' (unused-variable)",
-    "pipeline/live_pipeline.py:8:0: W0611: Unused KafkaError imported from confluent_kafka (unused-import)"
+    "pipeline/live_pipeline.py:172:16: R1716: Simplify chained comparison between the operands (chained-comparison)",
+    "pipeline/live_pipeline.py:301:15: R6103: Use 'if (message := consumer.poll(1)):' instead (consider-using-assignment-expr)",
+    "pipeline/live_pipeline.py:349:0: R0917: Too many positional arguments (6/5) (too-many-positional-arguments)",
+    "pipeline/live_pipeline.py:378:15: W0718: Catching too general exception Exception (broad-exception-caught)",
+    "pipeline/live_pipeline.py:438:11: W0718: Catching too general exception Exception (broad-exception-caught)",
+    "pipeline/live_pipeline.py:449:15: W0718: Catching too general exception Exception (broad-exception-caught)",
+    "pipeline/live_pipeline.py:456:15: W0718: Catching too general exception Exception (broad-exception-caught)",
+    "pipeline/live_pipeline.py:463:15: W0718: Catching too general exception Exception (broad-exception-caught)",
+    "pipeline/live_pipeline.py:10:0: W0612: Unused variable 'KafkaError' (unused-variable)",
+    "pipeline/live_pipeline.py:10:0: W0611: Unused KafkaError imported from confluent_kafka (unused-import)"
    ],
-   "score": 86.8
+   "score": 96.1
   }
  ],
- "average_score": 80.5
+ "average_score": 88.5
 }
