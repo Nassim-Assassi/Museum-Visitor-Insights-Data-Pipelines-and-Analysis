@@ -1,5 +1,6 @@
 import os
 from os import environ
+from pathlib import Path
 import sys
 from typing import Any
 from dotenv import load_dotenv
@@ -8,6 +9,7 @@ import extract as extract_phase
 import load as load_phase
 import transform as transform_phase
 from logging_config import configure_logging, get_logger
+from temp_paths import CLEAN_EXHIBITION_FILE, EXHIBITION_DATA_FILE, TEMP_DIR
 
 
 logger = get_logger(__name__)
@@ -60,17 +62,20 @@ def download_and_format_exhibition_data_from_s3_bucket(s3_client: Any, bucket_na
 
     exhibition_file_names = extract_phase.extract_s3_bucket_object_names(
         bucket_name, s3_client, prefix="lmnh", suffix=".json")
+    local_exhibition_files = [
+        str(TEMP_DIR / Path(file_name).name) for file_name in exhibition_file_names
+    ]
 
-    data = extract_phase.json_files_to_list(exhibition_file_names)
-    extract_phase.convert_list_of_dicts_to_csv(data, "exhibition_data.csv")
+    data = extract_phase.json_files_to_list(local_exhibition_files)
+    extract_phase.convert_list_of_dicts_to_csv(data, str(EXHIBITION_DATA_FILE))
 
-    extract_phase.delete_local_files(exhibition_file_names)
+    extract_phase.delete_local_files(local_exhibition_files)
 
 
 def clean_up_temp_extract_exhibition_data() -> None:
     """Deletes local temporary files."""
     try:
-        os.remove("exhibition_data.csv")
+        EXHIBITION_DATA_FILE.unlink()
     except FileNotFoundError:
         pass
     except OSError as e:
@@ -81,7 +86,7 @@ def clean_up_temp_extract_exhibition_data() -> None:
 def clean_up_temp_transform_clean_exhibition_data() -> None:
     """Delete temporary transform output files."""
     try:
-        os.remove("clean_exhibition.csv")
+        CLEAN_EXHIBITION_FILE.unlink()
     except FileNotFoundError:
         pass
     except OSError as e:
@@ -97,7 +102,7 @@ def generate_seed_data():
     exhibition_data = transform_phase.validate_raw_exhibition_data(
         exhibition_data)
 
-    exhibition_data.to_csv("clean_exhibition.csv", index=False)
+    exhibition_data.to_csv(CLEAN_EXHIBITION_FILE, index=False)
     logger.info("Saved clean_exhibition.csv")
 
 

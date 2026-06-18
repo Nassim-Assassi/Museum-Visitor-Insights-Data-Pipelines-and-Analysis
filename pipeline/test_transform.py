@@ -115,8 +115,16 @@ class TestCleanExhibitionData:
 class TestEnsureExtractedFilesExist:
     def test_raises_for_missing(self, monkeypatch):
         # Arrange
-        exists = Mock(return_value=False)
-        monkeypatch.setattr(transform.os.path, "exists", exists)
+        monkeypatch.setattr(
+            transform,
+            "EXHIBITION_DATA_FILE",
+            transform.EXHIBITION_DATA_FILE.parent / "_missing_exhibition.csv",
+        )
+        monkeypatch.setattr(
+            transform,
+            "HISTORICAL_DATA_FILE",
+            transform.HISTORICAL_DATA_FILE.parent / "_missing_historical.csv",
+        )
 
         # Act / Assert
         with pytest.raises(FileNotFoundError):
@@ -158,18 +166,23 @@ class TestRunTransform:
 
         # Assert
         assert to_csv.call_count == 2
-        assert to_csv.call_args_list[0].args[0] == "clean_exhibition.csv"
-        assert to_csv.call_args_list[1].args[0] == "clean_historical.csv"
+        assert to_csv.call_args_list[0].args[0] == transform.CLEAN_EXHIBITION_FILE
+        assert to_csv.call_args_list[1].args[0] == transform.CLEAN_HISTORICAL_FILE
 
 
 class TestCleanUpTempTransformFiles:
     def test_ignores_missing(self, tmp_path, monkeypatch):
         # Arrange
-        monkeypatch.chdir(tmp_path)
+        clean_exhibition = tmp_path / "clean_exhibition.csv"
+        clean_historical = tmp_path / "clean_historical.csv"
+        monkeypatch.setattr(
+            transform, "CLEAN_EXHIBITION_FILE", clean_exhibition)
+        monkeypatch.setattr(
+            transform, "CLEAN_HISTORICAL_FILE", clean_historical)
 
         # Act
         transform.clean_up_temp_transform_files()
 
         # Assert
-        assert not (tmp_path / "clean_exhibition.csv").exists()
-        assert not (tmp_path / "clean_historical.csv").exists()
+        assert not clean_exhibition.exists()
+        assert not clean_historical.exists()

@@ -1,21 +1,25 @@
 """Transform phase for the museum ETL pipeline."""
 
-import os
-
 import pandas as pd
 from logging_config import get_logger
+from temp_paths import (
+    CLEAN_EXHIBITION_FILE,
+    CLEAN_HISTORICAL_FILE,
+    EXHIBITION_DATA_FILE,
+    HISTORICAL_DATA_FILE,
+)
 
 logger = get_logger(__name__)
 
 
 def load_exhibition_csv():
     """Import the exhibition data from a CSV file into a pandas DataFrame."""
-    return pd.read_csv("exhibition_data.csv")
+    return pd.read_csv(EXHIBITION_DATA_FILE)
 
 
 def load_historical_csv():
     """Import the historical data from a CSV file into a pandas DataFrame."""
-    return pd.read_csv("historical_data.csv")
+    return pd.read_csv(HISTORICAL_DATA_FILE)
 
 
 def validate_raw_exhibition_data(exhibition_data: pd.DataFrame) -> pd.DataFrame:
@@ -189,9 +193,9 @@ def clean_exhibition_data(exhibition_data: pd.DataFrame) -> None:
 def ensure_extracted_files_exist() -> None:
     """Ensure extracted CSV files are available before running transform."""
     missing = []
-    for file_name in ["exhibition_data.csv", "historical_data.csv"]:
-        if not os.path.exists(file_name):
-            missing.append(file_name)
+    for file_path in [EXHIBITION_DATA_FILE, HISTORICAL_DATA_FILE]:
+        if not file_path.exists():
+            missing.append(file_path.name)
 
     if missing:
         raise FileNotFoundError(
@@ -222,10 +226,10 @@ def run_transform() -> None:
     historical_data = validate_raw_historical_data(historical_data)
 
     # Save cleaned data for load phase
-    exhibition_data.to_csv("clean_exhibition.csv", index=False)
+    exhibition_data.to_csv(CLEAN_EXHIBITION_FILE, index=False)
     logger.info("Saved clean_exhibition.csv")
 
-    historical_data.to_csv("clean_historical.csv", index=False)
+    historical_data.to_csv(CLEAN_HISTORICAL_FILE, index=False)
     logger.info("Saved clean_historical.csv")
 
     logger.info("Transform phase completed successfully")
@@ -233,12 +237,13 @@ def run_transform() -> None:
 
 def clean_up_temp_transform_files() -> None:
     """Delete temporary transform output files."""
-    for file_name in ["clean_exhibition.csv", "clean_historical.csv"]:
+    for file_path in [CLEAN_EXHIBITION_FILE, CLEAN_HISTORICAL_FILE]:
         try:
-            os.remove(file_name)
-            logger.debug("Deleted temporary file %s", file_name)
+            file_path.unlink()
+            logger.debug("Deleted temporary file %s", file_path.name)
         except FileNotFoundError:
             logger.debug(
-                "Temporary file %s not found, skipping deletion", file_name)
+                "Temporary file %s not found, skipping deletion", file_path.name)
         except Exception as e:
-            logger.error("Error deleting temporary file %s: %s", file_name, e)
+            logger.error("Error deleting temporary file %s: %s",
+                         file_path.name, e)

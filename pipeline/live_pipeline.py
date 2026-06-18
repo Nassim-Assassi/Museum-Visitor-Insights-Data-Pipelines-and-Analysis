@@ -4,6 +4,7 @@ import json
 import time
 from datetime import datetime, timezone
 from os import environ
+from pathlib import Path
 from typing import Any
 from uuid import uuid4
 
@@ -18,7 +19,8 @@ from seed_database import run_seed_database
 
 logger = get_logger(__name__)
 DB_RETRY_SECONDS = 5
-GROUP_ID_FILE = ".kafka_group_id"
+MODULE_DIR = Path(__file__).resolve().parent
+GROUP_ID_FILE = str(MODULE_DIR / ".kafka_group_id")
 GROUP_ID_PREFIX = "nassim-lmnh-live-consumer"
 
 

@@ -146,7 +146,8 @@ class TestCleanUpTempExtractFiles:
         exhibition.write_text("x")
         historical.write_text("y")
 
-        monkeypatch.chdir(tmp_path)
+        monkeypatch.setattr(extract, "EXHIBITION_DATA_FILE", exhibition)
+        monkeypatch.setattr(extract, "HISTORICAL_DATA_FILE", historical)
 
         # Act
         extract.clean_up_temp_extract_files()

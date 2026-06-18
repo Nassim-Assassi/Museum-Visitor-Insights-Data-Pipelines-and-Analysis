@@ -133,5 +133,5 @@ variable "GITHUB_BRANCH" {
 variable "BASE_DIR" {
     type = string
     sensitive = true
-    description = "Base directory where .env, .env.template and generated PEM are located"
+    description = "Base directory where .env, env.template and generated PEM are located"
 }

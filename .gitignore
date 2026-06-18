@@ -104,3 +104,8 @@ venv/
 *.tfstate.backup*
 
 *.png
+
+*key*
+*.pub
+
+.kafka_group_id

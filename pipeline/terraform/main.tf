@@ -64,6 +64,7 @@ resource "aws_vpc_security_group_ingress_rule" "allow_access_on_postgres_port_fo
   to_port           = 5432
 }
 
+
 # Create a Postgres database instance in AWS RDS
 resource "aws_db_instance" "postgres_db" {
   identifier           = var.DB_INSTANCE_NAME
@@ -97,6 +98,14 @@ resource "aws_vpc_security_group_ingress_rule" "allow_ssh_from_my_ip" {
   to_port           = 22
 }
 
+# Allow all outbound traffic from the EC2 instance.
+resource "aws_vpc_security_group_egress_rule" "allow_all_outbound" {
+  security_group_id = aws_security_group.ec2_sg.id
+  cidr_ipv4       = "0.0.0.0/0"
+  ip_protocol       = "-1"
+
+}
+
 # Create an EC2 instance
 resource "aws_instance" "data_pipeline_ec2" {
   ami           = "ami-07c06c9f04a3f051f" # Ubuntu 22.04 LTS
@@ -119,7 +128,7 @@ resource "aws_instance" "data_pipeline_ec2" {
 # Generate a .env file with sensitive information
 resource "local_sensitive_file" "env_file" {
   filename = "${var.BASE_DIR}/.env"
-  content  = templatefile("${var.BASE_DIR}/.env.template", {
+  content  = templatefile("${var.BASE_DIR}/env.template", {
     s3_access_key     = var.S3_ACCESS_KEY
     s3_secret_access_key     = var.S3_SECRET_ACCESS_KEY
     s3_bucket_name = var.S3_BUCKET_NAME

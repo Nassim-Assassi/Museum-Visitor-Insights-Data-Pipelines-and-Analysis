@@ -1,17 +1,15 @@
 """Load phase for the museum ETL pipeline."""
 
-import os
+from pathlib import Path
 
 import pandas as pd
 from psycopg2 import connect
 from sqlalchemy import create_engine
 from logging_config import get_logger
+from temp_paths import CLEAN_EXHIBITION_FILE, CLEAN_HISTORICAL_FILE
 
 logger = get_logger(__name__)
-
-# Temporary CSV files created by transform phase
-CLEAN_EXHIBITION_FILE = "clean_exhibition.csv"
-CLEAN_HISTORICAL_FILE = "clean_historical.csv"
+MODULE_DIR = Path(__file__).resolve().parent
 
 
 def load_clean_exhibition_csv() -> pd.DataFrame:
@@ -62,8 +60,11 @@ def drop_schema_tables(conn) -> None:
 def create_schema_tables(conn, schema_path: str = "schema.sql") -> None:
     """Create the required tables in the database using the schema file."""
     try:
+        resolved_schema_path = Path(schema_path)
+        if not resolved_schema_path.is_absolute():
+            resolved_schema_path = MODULE_DIR / resolved_schema_path
         with conn.cursor() as cur:
-            with open(schema_path, "r", encoding="utf-8") as f:
+            with open(resolved_schema_path, "r", encoding="utf-8") as f:
                 cur.execute(f.read())
         conn.commit()
     except FileNotFoundError:
@@ -239,7 +240,7 @@ def verify_clean_files_exist() -> None:
         CLEAN_EXHIBITION_FILE,
         CLEAN_HISTORICAL_FILE,
     ]
-    missing = [f for f in required_files if not os.path.exists(f)]
+    missing = [f.name for f in required_files if not f.exists()]
     if missing:
         raise FileNotFoundError(
             f"Missing cleaned data file(s): {', '.join(missing)}. "

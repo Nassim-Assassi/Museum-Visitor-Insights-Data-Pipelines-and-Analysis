@@ -1,8 +1,8 @@
-import os
 from unittest.mock import Mock
 
 import pandas as pd
 import pytest
+from temp_paths import TEMP_DIR
 
 import seed_database
 
@@ -33,7 +33,13 @@ class TestDownloadAndFormatExhibitionDataFromS3Bucket:
 
         # Assert
         assert download.call_count == 1
+        assert read_json.call_args.args[0] == [
+            str(TEMP_DIR / "a.json")
+        ]
         assert to_csv.call_count == 1
+        assert cleanup.call_args.args[0] == [
+            str(TEMP_DIR / "a.json")
+        ]
         assert cleanup.call_count == 1
 
 
@@ -42,7 +48,7 @@ class TestCleanupTempFiles:
         # Arrange
         f = tmp_path / "exhibition_data.csv"
         f.write_text("x")
-        monkeypatch.chdir(tmp_path)
+        monkeypatch.setattr(seed_database, "EXHIBITION_DATA_FILE", f)
 
         # Act
         seed_database.clean_up_temp_extract_exhibition_data()
@@ -54,7 +60,7 @@ class TestCleanupTempFiles:
         # Arrange
         f = tmp_path / "clean_exhibition.csv"
         f.write_text("x")
-        monkeypatch.chdir(tmp_path)
+        monkeypatch.setattr(seed_database, "CLEAN_EXHIBITION_FILE", f)
 
         # Act
         seed_database.clean_up_temp_transform_clean_exhibition_data()
@@ -82,7 +88,7 @@ class TestGenerateSeedData:
 
     # Assert
         assert to_csv.call_count == 1
-        assert to_csv.call_args.args[0] == "clean_exhibition.csv"
+        assert to_csv.call_args.args[0] == seed_database.CLEAN_EXHIBITION_FILE
 
 
 class TestBuildAndInsertSeedTables:

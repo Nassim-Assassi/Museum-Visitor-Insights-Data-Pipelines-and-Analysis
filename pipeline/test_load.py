@@ -249,8 +249,16 @@ class TestBuildKioskOutputTable:
 class TestVerifyCleanFilesExist:
     def test_raises_when_missing(self, monkeypatch):
         # Arrange
-        exists = Mock(return_value=False)
-        monkeypatch.setattr(load.os.path, "exists", exists)
+        monkeypatch.setattr(
+            load,
+            "CLEAN_EXHIBITION_FILE",
+            load.CLEAN_EXHIBITION_FILE.parent / "_missing_clean_exhibition.csv",
+        )
+        monkeypatch.setattr(
+            load,
+            "CLEAN_HISTORICAL_FILE",
+            load.CLEAN_HISTORICAL_FILE.parent / "_missing_clean_historical.csv",
+        )
 
         # Act / Assert
         with pytest.raises(FileNotFoundError):

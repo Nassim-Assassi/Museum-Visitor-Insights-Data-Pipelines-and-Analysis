@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 import json
 from botocore.exceptions import ClientError
@@ -6,6 +7,7 @@ from boto3 import client
 
 import pandas as pd
 from logging_config import get_logger
+from temp_paths import EXHIBITION_DATA_FILE, HISTORICAL_DATA_FILE, TEMP_DIR
 
 logger = get_logger(__name__)
 
@@ -42,10 +44,10 @@ def extract_s3_bucket_object_names(bucket_name: str, s3_client: client, prefix: 
     return object_names
 
 
-def extract_object_from_S3_bucket(bucket_name: str, file_name: str, s3_client: client, save_dir: str = ".") -> None:
+def extract_object_from_S3_bucket(bucket_name: str, file_name: str, s3_client: client, save_dir: str) -> None:
     """Extracts an object from an S3 bucket and saves it to a local file."""
-    s3_client.download_file(bucket_name, file_name,
-                            f"{save_dir}/{file_name}")
+    dest = Path(save_dir) / Path(file_name).name
+    s3_client.download_file(bucket_name, file_name, str(dest))
     logger.debug(
         "Downloaded %s from bucket %s to %s",
         file_name,
@@ -54,18 +56,18 @@ def extract_object_from_S3_bucket(bucket_name: str, file_name: str, s3_client: c
     )
 
 
-def extract_objects_from_S3_bucket(s3_client: client, bucket_name: str, file_names: list[str],  save_dir: str = ".") -> None:
+def extract_objects_from_S3_bucket(s3_client: client, bucket_name: str, file_names: list[str],  save_dir: str) -> None:
     """Extracts objects from an S3 bucket and saves them to local files."""
     for file_name in file_names:
         extract_object_from_S3_bucket(
             bucket_name, file_name, s3_client, save_dir)
 
 
-def download_data_from_s3_with_suffix(s3_client: client, bucket_name: str = "sigma-resources-museum", suffix: str = "") -> None:
+def download_data_from_s3_with_suffix(s3_client: client, bucket_name: str = "sigma-resources-museum", suffix: str = "", save_dir: str = str(TEMP_DIR)) -> None:
     """Downloads data from an S3 bucket with a specific suffix and saves it to local files."""
     object_names = extract_s3_bucket_object_names(
         bucket_name, s3_client, prefix="lmnh", suffix=suffix)
-    extract_objects_from_S3_bucket(s3_client, bucket_name, object_names)
+    extract_objects_from_S3_bucket(s3_client, bucket_name, object_names, save_dir)
 
 
 def combine_csv_files(file_names: list[str], output_file_name: str) -> None:
@@ -124,11 +126,11 @@ def extract_historical_phase(s3_client: client, bucket_name: str) -> None:
 
     historical_file_names = extract_s3_bucket_object_names(
         bucket_name, s3_client, prefix="lmnh", suffix=".csv")
+    local_historical_files = [str(TEMP_DIR / Path(f).name) for f in historical_file_names]
 
-    combine_csv_files(historical_file_names,
-                      "historical_data.csv")
+    combine_csv_files(local_historical_files, str(HISTORICAL_DATA_FILE))
 
-    delete_local_files(historical_file_names)
+    delete_local_files(local_historical_files)
 
 
 def extract_exhibition_phase(s3_client: client, bucket_name: str) -> None:
@@ -137,11 +139,12 @@ def extract_exhibition_phase(s3_client: client, bucket_name: str) -> None:
 
     exhibition_file_names = extract_s3_bucket_object_names(
         bucket_name, s3_client, prefix="lmnh", suffix=".json")
+    local_exhibition_files = [str(TEMP_DIR / Path(f).name) for f in exhibition_file_names]
 
-    data = json_files_to_list(exhibition_file_names)
-    convert_list_of_dicts_to_csv(data, "exhibition_data.csv")
+    data = json_files_to_list(local_exhibition_files)
+    convert_list_of_dicts_to_csv(data, str(EXHIBITION_DATA_FILE))
 
-    delete_local_files(exhibition_file_names)
+    delete_local_files(local_exhibition_files)
 
 
 def download_and_format_data_from_s3_bucket(s3_client: client, bucket_name) -> None:
@@ -155,8 +158,8 @@ def download_and_format_data_from_s3_bucket(s3_client: client, bucket_name) -> N
 
 def clean_up_temp_extract_files() -> None:
     """Deletes local temporary files."""
-    for file_name in ["exhibition_data.csv", "historical_data.csv"]:
+    for file_path in [EXHIBITION_DATA_FILE, HISTORICAL_DATA_FILE]:
         try:
-            os.remove(file_name)
+            file_path.unlink()
         except FileNotFoundError:
             pass
