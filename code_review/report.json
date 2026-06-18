@@ -32,14 +32,16 @@
   {
    "file_name": "./pipeline/seed_database.py",
    "errors": [
-    "pipeline/seed_database.py:77:8: W0707: Consider explicitly re-raising using 'raise Exception(f'Error deleting temporary file exhibition_data.csv: {e}') from e' (raise-missing-from)",
-    "pipeline/seed_database.py:77:8: W0719: Raising too general exception: Exception (broad-exception-raised)",
-    "pipeline/seed_database.py:88:8: W0707: Consider explicitly re-raising using 'raise Exception(f'Error deleting temporary file clean_exhibition.csv: {e}') from e' (raise-missing-from)",
-    "pipeline/seed_database.py:88:8: W0719: Raising too general exception: Exception (broad-exception-raised)",
-    "pipeline/seed_database.py:156:11: W0718: Catching too general exception Exception (broad-exception-caught)",
-    "pipeline/seed_database.py:167:15: W0718: Catching too general exception Exception (broad-exception-caught)"
+    "pipeline/seed_database.py:82:8: W0707: Consider explicitly re-raising using 'raise Exception(f'Error deleting temporary file exhibition_data.csv: {e}') from e' (raise-missing-from)",
+    "pipeline/seed_database.py:82:8: W0719: Raising too general exception: Exception (broad-exception-raised)",
+    "pipeline/seed_database.py:93:8: W0707: Consider explicitly re-raising using 'raise Exception(f'Error deleting temporary file clean_exhibition.csv: {e}') from e' (raise-missing-from)",
+    "pipeline/seed_database.py:93:8: W0719: Raising too general exception: Exception (broad-exception-raised)",
+    "pipeline/seed_database.py:161:11: W0718: Catching too general exception Exception (broad-exception-caught)",
+    "pipeline/seed_database.py:172:15: W0718: Catching too general exception Exception (broad-exception-caught)",
+    "pipeline/seed_database.py:1:0: W0612: Unused variable 'os' (unused-variable)",
+    "pipeline/seed_database.py:1:0: W0611: Unused import os (unused-import)"
    ],
-   "score": 93.9
+   "score": 92.1
   },
   {
    "file_name": "./pipeline/test_transform.py",
@@ -51,10 +53,10 @@
     "pipeline/test_transform.py:83:0: W0612: Unused variable 'TestConvertStartDateToDate' (unused-variable)",
     "pipeline/test_transform.py:95:0: W0612: Unused variable 'TestCleanExhibitionData' (unused-variable)",
     "pipeline/test_transform.py:115:0: W0612: Unused variable 'TestEnsureExtractedFilesExist' (unused-variable)",
-    "pipeline/test_transform.py:126:0: W0612: Unused variable 'TestRunTransform' (unused-variable)",
-    "pipeline/test_transform.py:165:0: W0612: Unused variable 'TestCleanUpTempTransformFiles' (unused-variable)"
+    "pipeline/test_transform.py:134:0: W0612: Unused variable 'TestRunTransform' (unused-variable)",
+    "pipeline/test_transform.py:173:0: W0612: Unused variable 'TestCleanUpTempTransformFiles' (unused-variable)"
    ],
-   "score": 87.8
+   "score": 88.3
   },
   {
    "file_name": "./pipeline/test_extract.py",
@@ -69,7 +71,7 @@
     "pipeline/test_extract.py:122:0: W0612: Unused variable 'TestDownloadAndFormatDataFromS3Bucket' (unused-variable)",
     "pipeline/test_extract.py:141:0: W0612: Unused variable 'TestCleanUpTempExtractFiles' (unused-variable)"
    ],
-   "score": 88.2
+   "score": 88.3
   },
   {
    "file_name": "./pipeline/logging_config.py",
@@ -82,17 +84,18 @@
   {
    "file_name": "./pipeline/extract.py",
    "errors": [
-    "pipeline/extract.py:29:7: R6103: Use 'if (contents := response.get('Contents')) is None:' instead (consider-using-assignment-expr)",
-    "pipeline/extract.py:45:0: C0103: Function name \"extract_object_from_S3_bucket\" doesn't conform to '(?:(?P<snake_case>[a-z_][a-z0-9_]*)|(?P<PascalCase>[^a-z][A-Za-z0-9]+)|(?P<camelCase>[^A-Z][A-Za-z0-9]+))$' pattern (invalid-name)",
-    "pipeline/extract.py:57:0: C0103: Function name \"extract_objects_from_S3_bucket\" doesn't conform to '(?:(?P<snake_case>[a-z_][a-z0-9_]*)|(?P<PascalCase>[^a-z][A-Za-z0-9]+)|(?P<camelCase>[^A-Z][A-Za-z0-9]+))$' pattern (invalid-name)",
-    "pipeline/extract.py:158:21: R6102: Consider using an in-place tuple instead of list (consider-using-tuple)",
-    "pipeline/extract.py:13:0: W0612: Unused variable 'get_s3_client' (unused-variable)",
-    "pipeline/extract.py:147:0: W0612: Unused variable 'download_and_format_data_from_s3_bucket' (unused-variable)",
-    "pipeline/extract.py:156:0: W0612: Unused variable 'clean_up_temp_extract_files' (unused-variable)",
-    "pipeline/extract.py:4:0: W0612: Unused variable 'ClientError' (unused-variable)",
-    "pipeline/extract.py:4:0: W0611: Unused ClientError imported from botocore.exceptions (unused-import)"
+    "pipeline/extract.py:66:0: C0301: Line too long (159/150) (line-too-long)",
+    "pipeline/extract.py:31:7: R6103: Use 'if (contents := response.get('Contents')) is None:' instead (consider-using-assignment-expr)",
+    "pipeline/extract.py:47:0: C0103: Function name \"extract_object_from_S3_bucket\" doesn't conform to '(?:(?P<snake_case>[a-z_][a-z0-9_]*)|(?P<PascalCase>[^a-z][A-Za-z0-9]+)|(?P<camelCase>[^A-Z][A-Za-z0-9]+))$' pattern (invalid-name)",
+    "pipeline/extract.py:59:0: C0103: Function name \"extract_objects_from_S3_bucket\" doesn't conform to '(?:(?P<snake_case>[a-z_][a-z0-9_]*)|(?P<PascalCase>[^a-z][A-Za-z0-9]+)|(?P<camelCase>[^A-Z][A-Za-z0-9]+))$' pattern (invalid-name)",
+    "pipeline/extract.py:161:21: R6102: Consider using an in-place tuple instead of list (consider-using-tuple)",
+    "pipeline/extract.py:15:0: W0612: Unused variable 'get_s3_client' (unused-variable)",
+    "pipeline/extract.py:150:0: W0612: Unused variable 'download_and_format_data_from_s3_bucket' (unused-variable)",
+    "pipeline/extract.py:159:0: W0612: Unused variable 'clean_up_temp_extract_files' (unused-variable)",
+    "pipeline/extract.py:5:0: W0612: Unused variable 'ClientError' (unused-variable)",
+    "pipeline/extract.py:5:0: W0611: Unused ClientError imported from botocore.exceptions (unused-import)"
    ],
-   "score": 88.2
+   "score": 87.7
   },
   {
    "file_name": "./pipeline/test_load.py",
@@ -108,24 +111,34 @@
     "pipeline/test_load.py:178:0: W0612: Unused variable 'TestMapRowToButtonId' (unused-variable)",
     "pipeline/test_load.py:228:0: W0612: Unused variable 'TestBuildKioskOutputTable' (unused-variable)",
     "pipeline/test_load.py:249:0: W0612: Unused variable 'TestVerifyCleanFilesExist' (unused-variable)",
-    "pipeline/test_load.py:260:0: W0612: Unused variable 'TestRunLoad' (unused-variable)"
+    "pipeline/test_load.py:268:0: W0612: Unused variable 'TestRunLoad' (unused-variable)"
    ],
    "score": 89.8
   },
   {
+   "file_name": "./pipeline/temp_paths.py",
+   "errors": [
+    "pipeline/temp_paths.py:9:0: W0612: Unused variable 'EXHIBITION_DATA_FILE' (unused-variable)",
+    "pipeline/temp_paths.py:10:0: W0612: Unused variable 'HISTORICAL_DATA_FILE' (unused-variable)",
+    "pipeline/temp_paths.py:11:0: W0612: Unused variable 'CLEAN_EXHIBITION_FILE' (unused-variable)",
+    "pipeline/temp_paths.py:12:0: W0612: Unused variable 'CLEAN_HISTORICAL_FILE' (unused-variable)"
+   ],
+   "score": 50.0
+  },
+  {
    "file_name": "./pipeline/load.py",
    "errors": [
-    "pipeline/load.py:57:4: W0612: Unused variable 'e' (unused-variable)",
-    "pipeline/load.py:71:4: W0612: Unused variable 'e' (unused-variable)",
-    "pipeline/load.py:187:56: R6201: Consider using set for membership test (use-set-for-membership)",
-    "pipeline/load.py:227:7: R6103: Use 'if (dropped_count := original_count - len(kiosk_output_data)) > 0:' instead (consider-using-assignment-expr)",
-    "pipeline/load.py:243:7: R6103: Use 'if (missing := [f for f in required_files if not os.path.exists(f)]):' instead (consider-using-assignment-expr)",
-    "pipeline/load.py:324:0: W9016: \"conn, engine\" missing in parameter type documentation (missing-type-doc)",
-    "pipeline/load.py:27:0: W0612: Unused variable 'get_db_engine' (unused-variable)",
-    "pipeline/load.py:38:0: W0612: Unused variable 'get_db_connection' (unused-variable)",
-    "pipeline/load.py:324:0: W0612: Unused variable 'run_load' (unused-variable)"
+    "pipeline/load.py:55:4: W0612: Unused variable 'e' (unused-variable)",
+    "pipeline/load.py:72:4: W0612: Unused variable 'e' (unused-variable)",
+    "pipeline/load.py:188:56: R6201: Consider using set for membership test (use-set-for-membership)",
+    "pipeline/load.py:228:7: R6103: Use 'if (dropped_count := original_count - len(kiosk_output_data)) > 0:' instead (consider-using-assignment-expr)",
+    "pipeline/load.py:244:7: R6103: Use 'if (missing := [f.name for f in required_files if not f.exists()]):' instead (consider-using-assignment-expr)",
+    "pipeline/load.py:325:0: W9016: \"conn, engine\" missing in parameter type documentation (missing-type-doc)",
+    "pipeline/load.py:25:0: W0612: Unused variable 'get_db_engine' (unused-variable)",
+    "pipeline/load.py:36:0: W0612: Unused variable 'get_db_connection' (unused-variable)",
+    "pipeline/load.py:325:0: W0612: Unused variable 'run_load' (unused-variable)"
    ],
-   "score": 94.4
+   "score": 94.5
   },
   {
    "file_name": "./pipeline/pipeline.py",
@@ -168,51 +181,49 @@
   {
    "file_name": "./pipeline/transform.py",
    "errors": [
-    "pipeline/transform.py:50:7: R6103: Use 'if (dropped_count := original_count - len(exhibition_data)) > 0:' instead (consider-using-assignment-expr)",
-    "pipeline/transform.py:93:7: R6103: Use 'if (invalid_val_count := invalid_val_mask.sum()) > 0:' instead (consider-using-assignment-expr)",
-    "pipeline/transform.py:106:7: R6103: Use 'if (invalid_at_count := invalid_at_mask.sum()) > 0:' instead (consider-using-assignment-expr)",
-    "pipeline/transform.py:114:7: R6103: Use 'if (total_dropped := original_count - len(historical_data)) > 0:' instead (consider-using-assignment-expr)",
-    "pipeline/transform.py:139:11: R6103: Use 'if (nan_count := exhibition_data['EXHIBITION_ID'].isna().sum()) > 0:' instead (consider-using-assignment-expr)",
-    "pipeline/transform.py:166:11: R6103: Use 'if (nan_count := exhibition_data['START_DATE'].isna().sum()) > 0:' instead (consider-using-assignment-expr)",
-    "pipeline/transform.py:160:8: W0612: Unused variable 'original_count' (unused-variable)",
-    "pipeline/transform.py:192:21: R6102: Consider using an in-place tuple instead of list (consider-using-tuple)",
-    "pipeline/transform.py:236:21: R6102: Consider using an in-place tuple instead of list (consider-using-tuple)",
-    "pipeline/transform.py:243:15: W0718: Catching too general exception Exception (broad-exception-caught)",
-    "pipeline/transform.py:204:0: W0612: Unused variable 'run_transform' (unused-variable)",
-    "pipeline/transform.py:234:0: W0612: Unused variable 'clean_up_temp_transform_files' (unused-variable)"
+    "pipeline/transform.py:54:7: R6103: Use 'if (dropped_count := original_count - len(exhibition_data)) > 0:' instead (consider-using-assignment-expr)",
+    "pipeline/transform.py:97:7: R6103: Use 'if (invalid_val_count := invalid_val_mask.sum()) > 0:' instead (consider-using-assignment-expr)",
+    "pipeline/transform.py:110:7: R6103: Use 'if (invalid_at_count := invalid_at_mask.sum()) > 0:' instead (consider-using-assignment-expr)",
+    "pipeline/transform.py:118:7: R6103: Use 'if (total_dropped := original_count - len(historical_data)) > 0:' instead (consider-using-assignment-expr)",
+    "pipeline/transform.py:143:11: R6103: Use 'if (nan_count := exhibition_data['EXHIBITION_ID'].isna().sum()) > 0:' instead (consider-using-assignment-expr)",
+    "pipeline/transform.py:170:11: R6103: Use 'if (nan_count := exhibition_data['START_DATE'].isna().sum()) > 0:' instead (consider-using-assignment-expr)",
+    "pipeline/transform.py:164:8: W0612: Unused variable 'original_count' (unused-variable)",
+    "pipeline/transform.py:196:21: R6102: Consider using an in-place tuple instead of list (consider-using-tuple)",
+    "pipeline/transform.py:240:21: R6102: Consider using an in-place tuple instead of list (consider-using-tuple)",
+    "pipeline/transform.py:247:15: W0718: Catching too general exception Exception (broad-exception-caught)",
+    "pipeline/transform.py:208:0: W0612: Unused variable 'run_transform' (unused-variable)",
+    "pipeline/transform.py:238:0: W0612: Unused variable 'clean_up_temp_transform_files' (unused-variable)"
    ],
    "score": 88.3
   },
   {
    "file_name": "./pipeline/test_seed_database.py",
    "errors": [
-    "pipeline/test_seed_database.py:1:0: W0612: Unused variable 'os' (unused-variable)",
-    "pipeline/test_seed_database.py:5:0: W0612: Unused variable 'pytest' (unused-variable)",
+    "pipeline/test_seed_database.py:4:0: W0612: Unused variable 'pytest' (unused-variable)",
     "pipeline/test_seed_database.py:10:0: W0612: Unused variable 'TestDownloadAndFormatExhibitionDataFromS3Bucket' (unused-variable)",
-    "pipeline/test_seed_database.py:40:0: W0612: Unused variable 'TestCleanupTempFiles' (unused-variable)",
-    "pipeline/test_seed_database.py:66:0: W0612: Unused variable 'TestGenerateSeedData' (unused-variable)",
-    "pipeline/test_seed_database.py:88:0: W0612: Unused variable 'TestBuildAndInsertSeedTables' (unused-variable)",
-    "pipeline/test_seed_database.py:1:0: W0611: Unused import os (unused-import)",
-    "pipeline/test_seed_database.py:5:0: W0611: Unused import pytest (unused-import)"
+    "pipeline/test_seed_database.py:46:0: W0612: Unused variable 'TestCleanupTempFiles' (unused-variable)",
+    "pipeline/test_seed_database.py:72:0: W0612: Unused variable 'TestGenerateSeedData' (unused-variable)",
+    "pipeline/test_seed_database.py:94:0: W0612: Unused variable 'TestBuildAndInsertSeedTables' (unused-variable)",
+    "pipeline/test_seed_database.py:4:0: W0611: Unused import pytest (unused-import)"
    ],
-   "score": 86.9
+   "score": 90.5
   },
   {
    "file_name": "./pipeline/live_pipeline.py",
    "errors": [
-    "pipeline/live_pipeline.py:172:16: R1716: Simplify chained comparison between the operands (chained-comparison)",
-    "pipeline/live_pipeline.py:301:15: R6103: Use 'if (message := consumer.poll(1)):' instead (consider-using-assignment-expr)",
-    "pipeline/live_pipeline.py:349:0: R0917: Too many positional arguments (6/5) (too-many-positional-arguments)",
-    "pipeline/live_pipeline.py:378:15: W0718: Catching too general exception Exception (broad-exception-caught)",
-    "pipeline/live_pipeline.py:438:11: W0718: Catching too general exception Exception (broad-exception-caught)",
-    "pipeline/live_pipeline.py:449:15: W0718: Catching too general exception Exception (broad-exception-caught)",
-    "pipeline/live_pipeline.py:456:15: W0718: Catching too general exception Exception (broad-exception-caught)",
-    "pipeline/live_pipeline.py:463:15: W0718: Catching too general exception Exception (broad-exception-caught)",
-    "pipeline/live_pipeline.py:10:0: W0612: Unused variable 'KafkaError' (unused-variable)",
-    "pipeline/live_pipeline.py:10:0: W0611: Unused KafkaError imported from confluent_kafka (unused-import)"
+    "pipeline/live_pipeline.py:174:16: R1716: Simplify chained comparison between the operands (chained-comparison)",
+    "pipeline/live_pipeline.py:303:15: R6103: Use 'if (message := consumer.poll(1)):' instead (consider-using-assignment-expr)",
+    "pipeline/live_pipeline.py:351:0: R0917: Too many positional arguments (6/5) (too-many-positional-arguments)",
+    "pipeline/live_pipeline.py:380:15: W0718: Catching too general exception Exception (broad-exception-caught)",
+    "pipeline/live_pipeline.py:440:11: W0718: Catching too general exception Exception (broad-exception-caught)",
+    "pipeline/live_pipeline.py:451:15: W0718: Catching too general exception Exception (broad-exception-caught)",
+    "pipeline/live_pipeline.py:458:15: W0718: Catching too general exception Exception (broad-exception-caught)",
+    "pipeline/live_pipeline.py:465:15: W0718: Catching too general exception Exception (broad-exception-caught)",
+    "pipeline/live_pipeline.py:11:0: W0612: Unused variable 'KafkaError' (unused-variable)",
+    "pipeline/live_pipeline.py:11:0: W0611: Unused KafkaError imported from confluent_kafka (unused-import)"
    ],
    "score": 96.1
   }
  ],
- "average_score": 88.5
+ "average_score": 86.2
 }
