@@ -18,4 +18,4 @@ ssh -o StrictHostKeyChecking=accept-new \
 	-o ConnectTimeout=10 \
 	-i "$PEM_FILE" \
 	"$SSH_USER@$EC2_INSTANCE_PUBLIC_IP" \
-	"cd ~/Coursework-Advanced-Data-Week-1 && nohup .venv/bin/python pipeline/live_pipeline.py --reset_db > pipeline/nohup.out 2>&1 < /dev/null &"
+	"cd ~/Coursework-Advanced-Data-Week-1 && sudo nohup .venv/bin/python pipeline/live_pipeline.py --reset_db > pipeline/live_pipeline.log 2>&1 &"

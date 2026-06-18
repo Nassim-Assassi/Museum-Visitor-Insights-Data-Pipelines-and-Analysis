@@ -65,6 +65,16 @@ resource "aws_vpc_security_group_ingress_rule" "allow_access_on_postgres_port_fo
 }
 
 
+# Allow inbound access to the Postgres database from tableau client on port 5432
+resource "aws_vpc_security_group_ingress_rule" "allow_access_on_postgres_port_for_tableau" {
+  security_group_id = aws_security_group.database_sg.id
+  cidr_ipv4         = "145.224.200.0/23"
+  from_port         = 5432
+  ip_protocol       = "tcp"
+  to_port           = 5432
+}
+
+
 # Create a Postgres database instance in AWS RDS
 resource "aws_db_instance" "postgres_db" {
   identifier           = var.DB_INSTANCE_NAME
