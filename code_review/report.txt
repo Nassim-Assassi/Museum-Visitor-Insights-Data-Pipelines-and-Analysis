@@ -23,10 +23,6 @@ Your code has been rated at 8.95/10
 
 ./pipeline/test_live_pipeline.py
 ************* Module test_live_pipeline
-pipeline/test_live_pipeline.py:220:17: E1123: Unexpected keyword argument 'group_id_file' in function call (unexpected-keyword-arg)
-pipeline/test_live_pipeline.py:232:17: E1123: Unexpected keyword argument 'group_id_file' in function call (unexpected-keyword-arg)
-pipeline/test_live_pipeline.py:245:8: E1123: Unexpected keyword argument 'group_id_file' in function call (unexpected-keyword-arg)
-pipeline/test_live_pipeline.py:245:8: E1120: No value for argument 'prefix' in function call (no-value-for-parameter)
 pipeline/test_live_pipeline.py:11:0: W0612: Unused variable 'TestDecodeMessage' (unused-variable)
 pipeline/test_live_pipeline.py:31:0: W0612: Unused variable 'TestValidateEventHelpers' (unused-variable)
 pipeline/test_live_pipeline.py:103:0: W0612: Unused variable 'TestValidateEvent' (unused-variable)
@@ -34,10 +30,10 @@ pipeline/test_live_pipeline.py:125:0: W0612: Unused variable 'TestCreateKafkaCon
 pipeline/test_live_pipeline.py:156:0: W0612: Unused variable 'TestConsumeBatch' (unused-variable)
 pipeline/test_live_pipeline.py:185:0: W0612: Unused variable 'TestRunAndInsertBatch' (unused-variable)
 pipeline/test_live_pipeline.py:213:0: W0612: Unused variable 'TestGroupIdPersistence' (unused-variable)
-pipeline/test_live_pipeline.py:255:0: W0612: Unused variable 'TestResetKioskOutput' (unused-variable)
+pipeline/test_live_pipeline.py:252:0: W0612: Unused variable 'TestResetKioskOutput' (unused-variable)
 
 -----------------------------------
-Your code has been rated at 7.59/10
+Your code has been rated at 9.33/10
 
 ./pipeline/seed_database.py
 ************* Module seed_database
