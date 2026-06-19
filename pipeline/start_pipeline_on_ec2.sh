@@ -23,4 +23,4 @@ ssh -o StrictHostKeyChecking=accept-new \
 	-o ConnectTimeout=10 \
 	-i "$PEM_FILE" \
 	"$SSH_USER@$EC2_INSTANCE_PUBLIC_IP" \
-	"cd ~/$REPO_DIR && sudo nohup .venv/bin/python pipeline/live_pipeline.py --reset_db > pipeline/live_pipeline.log 2>&1 &"
+	"cd ~/$REPO_DIR && sudo -n nohup .venv/bin/python pipeline/live_pipeline.py > pipeline/live_pipeline.log 2>&1 < /dev/null &"

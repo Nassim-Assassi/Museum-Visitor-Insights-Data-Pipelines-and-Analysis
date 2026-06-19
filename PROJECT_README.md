@@ -76,7 +76,7 @@ This step:
 From repo root:
 
 ```bash
-bash pipeline/start_pipeline_on_ec2.sh
+bash pipeline/initial_start_pipeline_on_ec2.sh
 ```
 
 Starts `pipeline/live_pipeline.py --reset_db` on EC2 with `nohup`.
