@@ -211,14 +211,14 @@
   {
    "file_name": "./pipeline/live_pipeline.py",
    "errors": [
-    "pipeline/live_pipeline.py:181:16: R1716: Simplify chained comparison between the operands (chained-comparison)",
-    "pipeline/live_pipeline.py:310:15: R6103: Use 'if (message := consumer.poll(1)):' instead (consider-using-assignment-expr)",
-    "pipeline/live_pipeline.py:358:0: R0917: Too many positional arguments (6/5) (too-many-positional-arguments)",
-    "pipeline/live_pipeline.py:387:15: W0718: Catching too general exception Exception (broad-exception-caught)",
-    "pipeline/live_pipeline.py:447:11: W0718: Catching too general exception Exception (broad-exception-caught)",
-    "pipeline/live_pipeline.py:458:15: W0718: Catching too general exception Exception (broad-exception-caught)",
-    "pipeline/live_pipeline.py:465:15: W0718: Catching too general exception Exception (broad-exception-caught)",
-    "pipeline/live_pipeline.py:472:15: W0718: Catching too general exception Exception (broad-exception-caught)",
+    "pipeline/live_pipeline.py:186:16: R1716: Simplify chained comparison between the operands (chained-comparison)",
+    "pipeline/live_pipeline.py:315:15: R6103: Use 'if (message := consumer.poll(1)):' instead (consider-using-assignment-expr)",
+    "pipeline/live_pipeline.py:363:0: R0917: Too many positional arguments (6/5) (too-many-positional-arguments)",
+    "pipeline/live_pipeline.py:392:15: W0718: Catching too general exception Exception (broad-exception-caught)",
+    "pipeline/live_pipeline.py:452:11: W0718: Catching too general exception Exception (broad-exception-caught)",
+    "pipeline/live_pipeline.py:463:15: W0718: Catching too general exception Exception (broad-exception-caught)",
+    "pipeline/live_pipeline.py:470:15: W0718: Catching too general exception Exception (broad-exception-caught)",
+    "pipeline/live_pipeline.py:477:15: W0718: Catching too general exception Exception (broad-exception-caught)",
     "pipeline/live_pipeline.py:11:0: W0612: Unused variable 'KafkaError' (unused-variable)",
     "pipeline/live_pipeline.py:11:0: W0611: Unused KafkaError imported from confluent_kafka (unused-import)"
    ],
