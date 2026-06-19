@@ -38,6 +38,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         action="store_true",
         help="Rebuild entire database and rotate Kafka consumer group id",
     )
+    parser.add_argument(
+        "-v", "--verbose",
+        action="store_true",
+        help="Enable verbose logging",
+    )
     return parser.parse_args(argv)
 
 
@@ -400,7 +405,7 @@ if __name__ == "__main__":
     args = parse_args()
     load_dotenv()
     config: dict[str, str] = dict(environ)
-    configure_logging()
+    configure_logging(verbose=args.verbose)
 
     conn = None
     engine = None
