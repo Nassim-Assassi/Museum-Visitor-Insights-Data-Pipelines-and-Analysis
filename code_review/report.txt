@@ -6,6 +6,18 @@
 ./coding_problems/advent_of_code/day_2/day_2.py
 ./coding_problems/advent_of_code/day_3/day_3.py
 ./coding_problems/advent_of_code/day_3/test_day_3.py
+./pipeline/museum_emergency_notifier.py
+************* Module museum_emergency_notifier
+pipeline/museum_emergency_notifier.py:79:11: W0718: Catching too general exception Exception (broad-exception-caught)
+pipeline/museum_emergency_notifier.py:67:16: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/museum_emergency_notifier.py:81:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/museum_emergency_notifier.py:83:12: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/museum_emergency_notifier.py:91:15: W0718: Catching too general exception Exception (broad-exception-caught)
+pipeline/museum_emergency_notifier.py:98:15: W0718: Catching too general exception Exception (broad-exception-caught)
+
+-----------------------------------
+Your code has been rated at 9.14/10
+
 ./pipeline/test_pipeline_script.py
 ************* Module test_pipeline_script
 pipeline/test_pipeline_script.py:6:0: W0612: Unused variable 'TestParseArguments' (unused-variable)
@@ -27,10 +39,10 @@ pipeline/test_live_pipeline.py:11:0: W0612: Unused variable 'TestDecodeMessage' 
 pipeline/test_live_pipeline.py:31:0: W0612: Unused variable 'TestValidateEventHelpers' (unused-variable)
 pipeline/test_live_pipeline.py:103:0: W0612: Unused variable 'TestValidateEvent' (unused-variable)
 pipeline/test_live_pipeline.py:125:0: W0612: Unused variable 'TestCreateKafkaConsumer' (unused-variable)
-pipeline/test_live_pipeline.py:156:0: W0612: Unused variable 'TestConsumeBatch' (unused-variable)
-pipeline/test_live_pipeline.py:185:0: W0612: Unused variable 'TestRunAndInsertBatch' (unused-variable)
-pipeline/test_live_pipeline.py:213:0: W0612: Unused variable 'TestGroupIdPersistence' (unused-variable)
-pipeline/test_live_pipeline.py:252:0: W0612: Unused variable 'TestResetKioskOutput' (unused-variable)
+pipeline/test_live_pipeline.py:157:0: W0612: Unused variable 'TestConsumeBatch' (unused-variable)
+pipeline/test_live_pipeline.py:186:0: W0612: Unused variable 'TestRunAndInsertBatch' (unused-variable)
+pipeline/test_live_pipeline.py:214:0: W0612: Unused variable 'TestGroupIdPersistence' (unused-variable)
+pipeline/test_live_pipeline.py:253:0: W0612: Unused variable 'TestResetKioskOutput' (unused-variable)
 
 -----------------------------------
 Your code has been rated at 9.33/10
@@ -78,6 +90,16 @@ pipeline/test_extract.py:141:0: W0612: Unused variable 'TestCleanUpTempExtractFi
 
 -----------------------------------
 Your code has been rated at 8.83/10
+
+./pipeline/email_sender.py
+************* Module email_sender
+pipeline/email_sender.py:30:7: R6103: Use 'if (missing_vars := [var for var in required_vars if not config.get(var)]):' instead (consider-using-assignment-expr)
+pipeline/email_sender.py:31:8: W1203: Use lazy % formatting in logging functions (logging-fstring-interpolation)
+pipeline/email_sender.py:52:4: C0415: Import outside toplevel (email.mime.text.MIMEText) (import-outside-toplevel)
+pipeline/email_sender.py:67:8: W0707: Consider explicitly re-raising using 'raise RuntimeError(f'Error sending email: {e}') from e' (raise-missing-from)
+
+-----------------------------------
+Your code has been rated at 8.89/10
 
 ./pipeline/logging_config.py
 ************* Module logging_config
