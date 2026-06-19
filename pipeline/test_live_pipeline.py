@@ -211,40 +211,37 @@ class TestRunAndInsertBatch:
 
 
 class TestGroupIdPersistence:
-    def test_load_saved_group_id_returns_existing_value(self, tmp_path):
+    def test_load_saved_group_id_returns_existing_value(self, tmp_path, monkeypatch):
         # Arrange
         group_id_file = tmp_path / "group_id.txt"
         group_id_file.write_text("persisted-group", encoding="utf-8")
+        monkeypatch.setattr(live_pipeline, "GROUP_ID_FILE", str(group_id_file))
 
         # Act
-        result = live_pipeline.load_saved_group_id(
-            group_id_file=group_id_file,
-        )
+        result = live_pipeline.load_saved_group_id()
 
         # Assert
         assert result == "persisted-group"
 
-    def test_load_saved_group_id_returns_none_when_missing(self, tmp_path):
+    def test_load_saved_group_id_returns_none_when_missing(self, tmp_path, monkeypatch):
         # Arrange
         group_id_file = tmp_path / "group_id.txt"
+        monkeypatch.setattr(live_pipeline, "GROUP_ID_FILE", str(group_id_file))
 
         # Act
-        result = live_pipeline.load_saved_group_id(
-            group_id_file=group_id_file,
-        )
+        result = live_pipeline.load_saved_group_id()
 
         # Assert
         assert result is None
 
-    def test_create_and_save_group_id_rotates_and_persists(self, tmp_path):
+    def test_create_and_save_group_id_rotates_and_persists(self, tmp_path, monkeypatch):
         # Arrange
         group_id_file = tmp_path / "group_id.txt"
         group_id_file.write_text("old-group", encoding="utf-8")
+        monkeypatch.setattr(live_pipeline, "GROUP_ID_FILE", str(group_id_file))
 
         # Act
-        live_pipeline.create_and_save_group_id(
-            group_id_file=group_id_file,
-        )
+        live_pipeline.create_and_save_group_id(prefix="museum-live-consumer")
         result = group_id_file.read_text(encoding="utf-8")
 
         # Assert
