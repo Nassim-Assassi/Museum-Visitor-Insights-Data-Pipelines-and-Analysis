@@ -18,10 +18,6 @@
   {
    "file_name": "./pipeline/test_live_pipeline.py",
    "errors": [
-    "pipeline/test_live_pipeline.py:220:17: E1123: Unexpected keyword argument 'group_id_file' in function call (unexpected-keyword-arg)",
-    "pipeline/test_live_pipeline.py:232:17: E1123: Unexpected keyword argument 'group_id_file' in function call (unexpected-keyword-arg)",
-    "pipeline/test_live_pipeline.py:245:8: E1123: Unexpected keyword argument 'group_id_file' in function call (unexpected-keyword-arg)",
-    "pipeline/test_live_pipeline.py:245:8: E1120: No value for argument 'prefix' in function call (no-value-for-parameter)",
     "pipeline/test_live_pipeline.py:11:0: W0612: Unused variable 'TestDecodeMessage' (unused-variable)",
     "pipeline/test_live_pipeline.py:31:0: W0612: Unused variable 'TestValidateEventHelpers' (unused-variable)",
     "pipeline/test_live_pipeline.py:103:0: W0612: Unused variable 'TestValidateEvent' (unused-variable)",
@@ -29,9 +25,9 @@
     "pipeline/test_live_pipeline.py:156:0: W0612: Unused variable 'TestConsumeBatch' (unused-variable)",
     "pipeline/test_live_pipeline.py:185:0: W0612: Unused variable 'TestRunAndInsertBatch' (unused-variable)",
     "pipeline/test_live_pipeline.py:213:0: W0612: Unused variable 'TestGroupIdPersistence' (unused-variable)",
-    "pipeline/test_live_pipeline.py:255:0: W0612: Unused variable 'TestResetKioskOutput' (unused-variable)"
+    "pipeline/test_live_pipeline.py:252:0: W0612: Unused variable 'TestResetKioskOutput' (unused-variable)"
    ],
-   "score": 75.9
+   "score": 93.3
   },
   {
    "file_name": "./pipeline/seed_database.py",
@@ -229,5 +225,5 @@
    "score": 96.2
   }
  ],
- "average_score": 85.1
+ "average_score": 86.2
 }
