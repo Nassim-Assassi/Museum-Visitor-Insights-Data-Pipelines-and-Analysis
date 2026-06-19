@@ -21,7 +21,7 @@ logger = get_logger(__name__)
 DB_RETRY_SECONDS = 5
 MODULE_DIR = Path(__file__).resolve().parent
 GROUP_ID_FILE = str(MODULE_DIR / ".kafka_group_id")
-GROUP_ID_PREFIX = "nassim-lmnh-live-consumer"
+DEFAULT_INFRASTRUCTURE_NAME = "museum"
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
@@ -41,31 +41,38 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     return parser.parse_args(argv)
 
 
-def generate_group_id(prefix: str = GROUP_ID_PREFIX) -> str:
+def generate_group_id(prefix: str) -> str:
     """Generate a random Kafka consumer group id."""
     return f"{prefix}-{uuid4().hex[:8]}"
 
 
-def save_group_id(group_id: str, group_id_file: str = GROUP_ID_FILE) -> None:
+def get_group_id_prefix(config: dict[str, str]) -> str:
+    """Build group id prefix from runtime config with a safe fallback."""
+    infrastructure_name = config.get(
+        "INFRASTRUCTURE_NAME", DEFAULT_INFRASTRUCTURE_NAME)
+    return f"{infrastructure_name}-live-consumer"
+
+
+def save_group_id(group_id: str) -> None:
     """Persist group id for future runs."""
-    with open(group_id_file, "w", encoding="utf-8") as file:
+    with open(GROUP_ID_FILE, "w", encoding="utf-8") as file:
         file.write(group_id)
 
 
-def load_saved_group_id(group_id_file: str = GROUP_ID_FILE) -> str | None:
+def load_saved_group_id() -> str | None:
     """Load saved group id if present and non-empty."""
     try:
-        with open(group_id_file, "r", encoding="utf-8") as file:
+        with open(GROUP_ID_FILE, "r", encoding="utf-8") as file:
             saved_group_id = file.read().strip()
     except FileNotFoundError:
         return None
     return saved_group_id or None
 
 
-def create_and_save_group_id(group_id_file: str = GROUP_ID_FILE) -> None:
+def create_and_save_group_id(prefix: str) -> None:
     """Generate and persist a new group id."""
-    new_group_id = generate_group_id()
-    save_group_id(new_group_id, group_id_file)
+    new_group_id = generate_group_id(prefix=prefix)
+    save_group_id(new_group_id)
 
 
 def reset_entire_database(config: dict[str, str], conn: Any, engine: Any) -> None:
@@ -415,7 +422,7 @@ if __name__ == "__main__":
 
         group_id = load_saved_group_id()
         if args.reset_kiosk_output or args.reset_db or group_id is None:
-            create_and_save_group_id()
+            create_and_save_group_id(prefix=get_group_id_prefix(config))
             group_id = load_saved_group_id()
 
         kafka_consumer = create_kafka_consumer(

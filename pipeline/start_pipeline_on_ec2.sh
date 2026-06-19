@@ -5,6 +5,11 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ENV_FILE="$SCRIPT_DIR/../.env"
 source "$ENV_FILE"
 
+: "${GITHUB_REPO_URL:?GITHUB_REPO_URL missing in .env}"
+: "${EC2_KEY_PAIR_NAME:?EC2_KEY_PAIR_NAME missing in .env}"
+: "${EC2_INSTANCE_PUBLIC_IP:?EC2_INSTANCE_PUBLIC_IP missing in .env}"
+REPO_DIR="$(basename "${GITHUB_REPO_URL%.git}")"
+
 PEM_FILE_NAME="$EC2_KEY_PAIR_NAME.pem"
 PEM_FILE="$SCRIPT_DIR/../$PEM_FILE_NAME"
 
@@ -18,4 +23,4 @@ ssh -o StrictHostKeyChecking=accept-new \
 	-o ConnectTimeout=10 \
 	-i "$PEM_FILE" \
 	"$SSH_USER@$EC2_INSTANCE_PUBLIC_IP" \
-	"cd ~/Coursework-Advanced-Data-Week-1 && sudo nohup .venv/bin/python pipeline/live_pipeline.py --reset_db > pipeline/live_pipeline.log 2>&1 &"
+	"cd ~/$REPO_DIR && sudo nohup .venv/bin/python pipeline/live_pipeline.py --reset_db > pipeline/live_pipeline.log 2>&1 &"

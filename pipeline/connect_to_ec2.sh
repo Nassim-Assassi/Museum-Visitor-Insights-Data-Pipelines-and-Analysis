@@ -5,6 +5,9 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ENV_FILE="$SCRIPT_DIR/../.env"
 source "$ENV_FILE"
 
+: "${EC2_KEY_PAIR_NAME:?EC2_KEY_PAIR_NAME missing in .env}"
+: "${EC2_INSTANCE_PUBLIC_IP:?EC2_INSTANCE_PUBLIC_IP missing in .env}"
+
 PEM_FILE_NAME="$EC2_KEY_PAIR_NAME.pem"
 PEM_FILE="$SCRIPT_DIR/../$PEM_FILE_NAME"
 
