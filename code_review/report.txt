@@ -23,6 +23,10 @@ Your code has been rated at 8.95/10
 
 ./pipeline/test_live_pipeline.py
 ************* Module test_live_pipeline
+pipeline/test_live_pipeline.py:220:17: E1123: Unexpected keyword argument 'group_id_file' in function call (unexpected-keyword-arg)
+pipeline/test_live_pipeline.py:232:17: E1123: Unexpected keyword argument 'group_id_file' in function call (unexpected-keyword-arg)
+pipeline/test_live_pipeline.py:245:8: E1123: Unexpected keyword argument 'group_id_file' in function call (unexpected-keyword-arg)
+pipeline/test_live_pipeline.py:245:8: E1120: No value for argument 'prefix' in function call (no-value-for-parameter)
 pipeline/test_live_pipeline.py:11:0: W0612: Unused variable 'TestDecodeMessage' (unused-variable)
 pipeline/test_live_pipeline.py:31:0: W0612: Unused variable 'TestValidateEventHelpers' (unused-variable)
 pipeline/test_live_pipeline.py:103:0: W0612: Unused variable 'TestValidateEvent' (unused-variable)
@@ -33,7 +37,7 @@ pipeline/test_live_pipeline.py:213:0: W0612: Unused variable 'TestGroupIdPersist
 pipeline/test_live_pipeline.py:255:0: W0612: Unused variable 'TestResetKioskOutput' (unused-variable)
 
 -----------------------------------
-Your code has been rated at 9.31/10
+Your code has been rated at 7.59/10
 
 ./pipeline/seed_database.py
 ************* Module seed_database
@@ -216,17 +220,17 @@ Your code has been rated at 9.05/10
 
 ./pipeline/live_pipeline.py
 ************* Module live_pipeline
-pipeline/live_pipeline.py:174:16: R1716: Simplify chained comparison between the operands (chained-comparison)
-pipeline/live_pipeline.py:303:15: R6103: Use 'if (message := consumer.poll(1)):' instead (consider-using-assignment-expr)
-pipeline/live_pipeline.py:351:0: R0917: Too many positional arguments (6/5) (too-many-positional-arguments)
-pipeline/live_pipeline.py:380:15: W0718: Catching too general exception Exception (broad-exception-caught)
-pipeline/live_pipeline.py:440:11: W0718: Catching too general exception Exception (broad-exception-caught)
-pipeline/live_pipeline.py:451:15: W0718: Catching too general exception Exception (broad-exception-caught)
+pipeline/live_pipeline.py:181:16: R1716: Simplify chained comparison between the operands (chained-comparison)
+pipeline/live_pipeline.py:310:15: R6103: Use 'if (message := consumer.poll(1)):' instead (consider-using-assignment-expr)
+pipeline/live_pipeline.py:358:0: R0917: Too many positional arguments (6/5) (too-many-positional-arguments)
+pipeline/live_pipeline.py:387:15: W0718: Catching too general exception Exception (broad-exception-caught)
+pipeline/live_pipeline.py:447:11: W0718: Catching too general exception Exception (broad-exception-caught)
 pipeline/live_pipeline.py:458:15: W0718: Catching too general exception Exception (broad-exception-caught)
 pipeline/live_pipeline.py:465:15: W0718: Catching too general exception Exception (broad-exception-caught)
+pipeline/live_pipeline.py:472:15: W0718: Catching too general exception Exception (broad-exception-caught)
 pipeline/live_pipeline.py:11:0: W0612: Unused variable 'KafkaError' (unused-variable)
 pipeline/live_pipeline.py:11:0: W0611: Unused KafkaError imported from confluent_kafka (unused-import)
 
 -----------------------------------
-Your code has been rated at 9.61/10
+Your code has been rated at 9.62/10
 
