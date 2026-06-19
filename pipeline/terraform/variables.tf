@@ -94,6 +94,7 @@ variable "SUBNET_ID" {
 
 variable "GITHUB_REPO_URL" {
   type        = string
+  sensitive   = true
   default     = ""
   description = "GitHub repository URL to clone on EC2. Used for bootstrapping the EC2 instance."
 }
@@ -103,3 +104,40 @@ variable "INFRASTRUCTURE_NAME" {
   sensitive   = true
   description = "The name of the infrastructure/project. Used for naming resources."
 }
+
+variable "SMTP_SERVER" {
+  type        = string
+  sensitive   = true
+  description = "The SMTP server for sending email alerts"
+}
+
+variable "SMTP_PORT" {
+  type        = string
+  sensitive   = true
+  description = "The SMTP port for sending email alerts"
+}
+
+variable "SMTP_USERNAME" {
+  type        = string
+  sensitive   = true
+  description = "The SMTP username for sending email alerts"
+}
+
+variable "SMTP_PASSWORD" {
+  type        = string
+  sensitive   = true
+  description = "The SMTP password for sending email alerts"
+}
+
+variable "EMAIL_FROM_ADDRESS" {
+  type        = string
+  sensitive   = true
+  description = "The email address from which alerts will be sent"
+}
+
+variable "ALERTS_RECIPIENT_EMAIL_ADDRESS" {
+  type        = string
+  sensitive   = true
+  description = "The email address to which alerts will be sent"
+}
+

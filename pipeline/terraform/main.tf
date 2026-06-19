@@ -142,7 +142,7 @@ resource "aws_instance" "data_pipeline_ec2" {
 # Generate a .env file with sensitive information
 resource "local_sensitive_file" "env_file" {
   filename = "${local.repo_root}/.env"
-  content = templatefile("${local.repo_root}/env.template", {
+  content = templatefile("${local.repo_root}/env_template", {
     s3_access_key           = var.S3_ACCESS_KEY
     s3_secret_access_key    = var.S3_SECRET_ACCESS_KEY
     s3_bucket_name          = var.S3_BUCKET_NAME
@@ -161,6 +161,12 @@ resource "local_sensitive_file" "env_file" {
     ec2_key_pair_name       = "${var.INFRASTRUCTURE_NAME}-ec2"
     ec2_instance_public_ip  = aws_instance.data_pipeline_ec2.public_ip
     github_repo_url         = var.GITHUB_REPO_URL
+    smtp_server             = var.SMTP_SERVER
+    smtp_port               = var.SMTP_PORT
+    smtp_username           = var.SMTP_USERNAME
+    smtp_password           = var.SMTP_PASSWORD
+    email_from_address      = var.EMAIL_FROM_ADDRESS
+    alerts_recipient_email_address = var.ALERTS_RECIPIENT_EMAIL_ADDRESS
   })
   file_permission = "0600"
 }

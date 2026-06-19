@@ -263,7 +263,7 @@ def validate_event(event: Any, exhibit_ids: set) -> bool:
     return True
 
 
-def create_kafka_consumer(config: dict[str, str], group_id: str) -> Consumer:
+def create_kafka_consumer(config: dict[str, str], group_id: str, offset_reset: str) -> Consumer:
     """Create and subscribe a Kafka consumer to topic from environment."""
     bootstrap_servers = config.get("KAFKA_BOOTSTRAP_SERVERS")
     topic = config.get("KAFKA_TOPIC")
@@ -280,7 +280,7 @@ def create_kafka_consumer(config: dict[str, str], group_id: str) -> Consumer:
     consumer_config = {
         "bootstrap.servers": bootstrap_servers,
         "group.id": group_id,
-        "auto.offset.reset": "earliest",
+        "auto.offset.reset": offset_reset,
         "enable.auto.commit": False,
         "security.protocol": security_protocol,
         "sasl.mechanism": sasl_mechanism,
@@ -431,7 +431,7 @@ if __name__ == "__main__":
             group_id = load_saved_group_id()
 
         kafka_consumer = create_kafka_consumer(
-            config, group_id=group_id)
+            config, group_id=group_id, offset_reset="earliest")
 
         # Get button ID mappings
         description_button_id_dict = get_description_button_id_dict(conn)
@@ -457,21 +457,21 @@ if __name__ == "__main__":
                 "Failed to establish startup resources. Check configuration and connectivity. Exiting.")
     finally:
         try:
-            if conn is not None:
+            if conn:
                 conn.close()
                 logger.info("Database connection closed")
         except Exception as e:
             logger.error("Error closing database connection: %s", e)
 
         try:
-            if engine is not None:
+            if engine:
                 engine.dispose()
                 logger.info("Database engine disposed")
         except Exception as e:
             logger.error("Error disposing database engine: %s", e)
 
         try:
-            if kafka_consumer is not None:
+            if kafka_consumer:
                 kafka_consumer.close()
                 logger.info("Kafka consumer closed")
         except Exception as e:

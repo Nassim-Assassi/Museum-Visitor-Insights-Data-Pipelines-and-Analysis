@@ -129,7 +129,7 @@ class TestCreateKafkaConsumer:
 
         # Act / Assert
         with pytest.raises(ValueError):
-            live_pipeline.create_kafka_consumer(config, "gid")
+            live_pipeline.create_kafka_consumer(config, "gid", "earliest")
 
     def test_subscribes(self, monkeypatch):
         # Arrange
@@ -145,7 +145,8 @@ class TestCreateKafkaConsumer:
         }
 
         # Act
-        consumer = live_pipeline.create_kafka_consumer(config, "gid")
+        consumer = live_pipeline.create_kafka_consumer(
+            config, "gid", "earliest")
 
         # Assert
         assert isinstance(consumer, FakeConsumerForConfig)
