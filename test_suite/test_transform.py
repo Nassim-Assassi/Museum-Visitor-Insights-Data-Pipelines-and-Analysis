@@ -2,7 +2,7 @@ import pandas as pd
 import pytest
 from unittest.mock import Mock
 
-import transform
+from data_seeding_pipeline import transform
 
 
 class TestLoadExhibitionCsv:

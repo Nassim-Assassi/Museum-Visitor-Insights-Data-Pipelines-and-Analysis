@@ -6,8 +6,8 @@ from botocore.exceptions import ClientError
 from boto3 import client
 
 import pandas as pd
-from logging_config import get_logger
-from temp_paths import EXHIBITION_DATA_FILE, HISTORICAL_DATA_FILE, TEMP_DIR
+from .logging_config import get_logger
+from .temp_paths import EXHIBITION_DATA_FILE, HISTORICAL_DATA_FILE, TEMP_DIR
 
 logger = get_logger(__name__)
 

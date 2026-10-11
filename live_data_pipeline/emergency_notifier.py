@@ -3,10 +3,10 @@ import sys
 from dotenv import load_dotenv
 from datetime import datetime, timezone
 
-from live_pipeline import create_kafka_consumer, consume_batch, get_exhibit_ids
-from email_sender import send_email, verify_smtp_vars
-from logging_config import get_logger, configure_logging
-from load import get_db_connection
+from data_seeding_pipeline.load import get_db_connection
+from data_seeding_pipeline.logging_config import get_logger, configure_logging
+from .email_sender import send_email, verify_smtp_vars
+from .live_pipeline import create_kafka_consumer, consume_batch, get_exhibit_ids
 
 logger = get_logger(__name__)
 

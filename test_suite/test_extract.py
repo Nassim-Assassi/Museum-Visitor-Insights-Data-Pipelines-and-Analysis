@@ -4,7 +4,7 @@ from unittest.mock import Mock
 import pandas as pd
 import pytest
 
-import extract
+from data_seeding_pipeline import extract
 from conftest import S3Downloader, S3ListEmpty, S3ListWithContents
 
 

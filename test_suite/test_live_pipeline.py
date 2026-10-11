@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, Mock
 import pandas as pd
 import pytest
 
-import live_pipeline
+from live_data_pipeline import live_pipeline
 from conftest import FakeConsumerForConfig, FakeMessage, FakePollingConsumer
 
 

@@ -12,7 +12,7 @@ provider "aws" {
 }
 
 locals {
-  repo_root = abspath("${path.root}/../..")
+  repo_root = abspath("${path.root}/..")
 }
 
 # Create an SSH key pair and save the private key locally.

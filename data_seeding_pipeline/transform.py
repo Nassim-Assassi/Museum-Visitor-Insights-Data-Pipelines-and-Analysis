@@ -1,8 +1,8 @@
 """Transform phase for the museum ETL pipeline."""
 
 import pandas as pd
-from logging_config import get_logger
-from temp_paths import (
+from .logging_config import get_logger
+from .temp_paths import (
     CLEAN_EXHIBITION_FILE,
     CLEAN_HISTORICAL_FILE,
     EXHIBITION_DATA_FILE,

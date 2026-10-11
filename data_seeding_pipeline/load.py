@@ -5,8 +5,8 @@ from pathlib import Path
 import pandas as pd
 from psycopg2 import connect
 from sqlalchemy import create_engine
-from logging_config import get_logger
-from temp_paths import CLEAN_EXHIBITION_FILE, CLEAN_HISTORICAL_FILE
+from .logging_config import get_logger
+from .temp_paths import CLEAN_EXHIBITION_FILE, CLEAN_HISTORICAL_FILE
 
 logger = get_logger(__name__)
 MODULE_DIR = Path(__file__).resolve().parent

@@ -12,9 +12,15 @@ from confluent_kafka import Consumer, KafkaError
 from dotenv import load_dotenv
 import pandas as pd
 
-from load import build_kiosk_output_table, get_db_engine, get_db_connection, get_description_button_id_dict, get_value_button_id_dict
-from logging_config import configure_logging, get_logger
-from seed_database import run_seed_database
+from data_seeding_pipeline.load import (
+    build_kiosk_output_table,
+    get_db_engine,
+    get_db_connection,
+    get_description_button_id_dict,
+    get_value_button_id_dict,
+)
+from data_seeding_pipeline.logging_config import configure_logging, get_logger
+from data_seeding_pipeline.seed_database import run_seed_database
 
 
 logger = get_logger(__name__)

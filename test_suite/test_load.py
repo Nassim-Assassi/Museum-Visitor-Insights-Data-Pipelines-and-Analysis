@@ -2,7 +2,7 @@ import pandas as pd
 import pytest
 from unittest.mock import Mock, call
 
-import load
+from data_seeding_pipeline import load
 from conftest import DummyConn
 
 

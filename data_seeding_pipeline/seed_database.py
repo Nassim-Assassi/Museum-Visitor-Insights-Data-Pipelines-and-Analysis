@@ -5,11 +5,11 @@ import sys
 from typing import Any
 from dotenv import load_dotenv
 
-import extract as extract_phase
-import load as load_phase
-import transform as transform_phase
-from logging_config import configure_logging, get_logger
-from temp_paths import CLEAN_EXHIBITION_FILE, EXHIBITION_DATA_FILE, TEMP_DIR
+from . import extract as extract_phase
+from . import load as load_phase
+from . import transform as transform_phase
+from .logging_config import configure_logging, get_logger
+from .temp_paths import CLEAN_EXHIBITION_FILE, EXHIBITION_DATA_FILE, TEMP_DIR
 
 
 logger = get_logger(__name__)

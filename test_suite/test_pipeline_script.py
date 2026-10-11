@@ -1,6 +1,6 @@
 import sys
 
-import pipeline as pipeline_script
+from data_seeding_pipeline import pipeline as pipeline_script
 
 
 class TestParseArguments:

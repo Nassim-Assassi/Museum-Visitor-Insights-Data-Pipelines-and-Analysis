@@ -2,7 +2,8 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ENV_FILE="$SCRIPT_DIR/../.env"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+ENV_FILE="$REPO_ROOT/.env"
 source "$ENV_FILE"
 
 # Check ENV variables
@@ -13,7 +14,7 @@ source "$ENV_FILE"
 REPO_DIR="$(basename "${GITHUB_REPO_URL%.git}")"
 
 PEM_FILE_NAME="$EC2_KEY_PAIR_NAME.pem"
-PEM_FILE="$SCRIPT_DIR/../$PEM_FILE_NAME"
+PEM_FILE="$REPO_ROOT/$PEM_FILE_NAME"
 
 
 # Edit these values once, then run the script.
@@ -25,8 +26,8 @@ SSH_USER="ec2-user"
 scp -o StrictHostKeyChecking=accept-new \
   -o ConnectTimeout=10 \
   -i "$PEM_FILE" \
-  "$SCRIPT_DIR/../github_deploy_key" \
-  "$SCRIPT_DIR/../github_deploy_key.pub" \
+  "$REPO_ROOT/github_deploy_key" \
+  "$REPO_ROOT/github_deploy_key.pub" \
   "$SSH_USER@$EC2_INSTANCE_PUBLIC_IP:~/.ssh/"
 
 ssh -o StrictHostKeyChecking=accept-new \

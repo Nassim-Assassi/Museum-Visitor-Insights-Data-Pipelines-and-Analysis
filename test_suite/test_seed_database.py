@@ -2,9 +2,9 @@ from unittest.mock import Mock
 
 import pandas as pd
 import pytest
-from temp_paths import TEMP_DIR
+from data_seeding_pipeline.temp_paths import TEMP_DIR
 
-import seed_database
+from data_seeding_pipeline import seed_database
 
 
 class TestDownloadAndFormatExhibitionDataFromS3Bucket:

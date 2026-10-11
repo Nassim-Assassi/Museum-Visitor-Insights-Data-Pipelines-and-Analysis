@@ -4,10 +4,10 @@ from os import environ
 
 from dotenv import load_dotenv
 
-from extract import clean_up_temp_extract_files, get_s3_client, download_and_format_data_from_s3_bucket
-from transform import run_transform, clean_up_temp_transform_files
-from load import run_load, verify_clean_files_exist, get_db_engine, get_db_connection
-from logging_config import configure_logging, get_logger
+from .extract import clean_up_temp_extract_files, get_s3_client, download_and_format_data_from_s3_bucket
+from .transform import run_transform, clean_up_temp_transform_files
+from .load import run_load, verify_clean_files_exist, get_db_engine, get_db_connection
+from .logging_config import configure_logging, get_logger
 
 
 logger = get_logger(__name__)

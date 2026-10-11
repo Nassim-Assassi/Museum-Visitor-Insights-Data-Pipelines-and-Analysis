@@ -1,7 +1,7 @@
 import logging
 from unittest.mock import Mock
 
-import logging_config
+from data_seeding_pipeline import logging_config
 
 
 class TestGetLogger:
