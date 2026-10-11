@@ -1,48 +1,43 @@
-# Museum Visitor Insights: Real-Time Data Pipeline
+# Museum Visitor Insights: Data Pipelines and Analysis
 
 ## Project Overview
 
-This project implements a real-time data pipeline for a natural history museum to collect, validate, store, and analyse visitor interactions from exhibition kiosks.
+This project contains batch and real-time data pipelines for a natural history museum. Together, they prepare exhibition and historical data, process live visitor interactions from exhibition kiosks, store validated records, and support analysis of visitor and operational trends.
 
-The kiosks capture visitor satisfaction ratings on a five-point scale, alongside assistance requests and emergency alerts. The project addresses the need for an automated system to process these interactions continuously, maintain data quality, and make the resulting data available for further analysis.
+The batch workflows retrieve source data from AWS S3, transform it, and load it into PostgreSQL. A separate Kafka consumer continuously validates and stores kiosk events. Another consumer sends email notifications for recent emergency events. Terraform and Bash scripts support AWS provisioning and deployment, while a Jupyter notebook is provided for analysis.
 
-A Python ETL pipeline consumes live events from Apache Kafka, validates and cleans incoming messages, and stores eligible records in a PostgreSQL database hosted on AWS RDS. The pipeline runs continuously on an AWS EC2 instance, with Terraform and shell scripts automating infrastructure provisioning and deployment.
-
-The system also includes an emergency email notification mechanism that alerts security staff when an emergency event is detected. Jupyter Notebook analysis supports exploration of the collected data and investigation of visitor satisfaction and operational trends.
+The repository includes the application code, tests, infrastructure definitions, deployment scripts, and development skills. It does not include deployment credentials, Terraform variable values, Terraform state, or the generated analysis images.
 
 ## Project Objectives
 
-* Build an automated, real-time ETL pipeline for kiosk interactions.
-* Consume live event data from Apache Kafka.
-* Validate, clean, and transform incoming messages before database insertion.
-* Store structured interaction records in a remote PostgreSQL database.
+* Extract, transform, and load source exhibition and historical data.
+* Seed the database with exhibition, floor, department, and button reference data.
+* Consume and validate live kiosk events from Apache Kafka.
+* Store structured interaction records in PostgreSQL.
 * Deploy the pipeline to AWS EC2 for continuous execution.
 * Provision cloud infrastructure using Terraform.
 * Automate deployment and startup using Bash scripts.
-* Send email notifications to security staff when emergency events are detected.
-* Use Jupyter Notebooks to explore the data and investigate visitor experience and operational patterns.
+* Send email notifications for recent emergency events.
+* Explore collected data with the supplied Jupyter notebook.
 
 ## Architecture and Technologies
 
-The pipeline follows a continuous ingestion and processing workflow.
+The project has two related data flows:
 
-1. **Data ingestion:** Kiosk interactions arrive through an Apache Kafka stream.
-2. **Data validation:** Python checks message structure, interaction values, timestamps, and exhibition eligibility.
-3. **Data transformation:** Valid events are cleaned and converted into the required database format.
-4. **Data storage:** Processed records are inserted into PostgreSQL hosted on AWS RDS.
-5. **Emergency notifications:** Detected emergency events trigger email alerts to security staff.
-6. **Infrastructure provisioning:** Terraform provisions the required AWS resources.
-7. **Deployment and execution:** Bash scripts configure EC2, install dependencies, transfer configuration files, and start the pipeline.
-8. **Data analysis:** Jupyter Notebooks support exploratory data analysis using the stored visitor interaction data.
+1. **Batch preparation:** `data_seeding_pipeline/` downloads exhibition and historical data from S3, transforms it, and loads it into PostgreSQL. Its database seeding workflow builds reference tables from exhibition data.
+2. **Live ingestion:** `live_data_pipeline/` consumes kiosk events from Kafka, validates them against the event rules and seeded exhibit IDs, then stores accepted interactions in PostgreSQL.
+3. **Emergency notification:** A separate Kafka consumer detects emergency events and sends email alerts for events within its recent-event window.
+4. **Infrastructure and deployment:** Terraform provisions AWS resources; scripts in `scripts/` transfer configuration and launch the processes on EC2.
+5. **Analysis:** `visualisations/analysis.ipynb` provides exploratory analysis of the collected data.
 
 ### Technology Stack
 
-* **Python:** ETL processing and Kafka consumption
+* **Python:** Batch ETL, event processing, and notification consumers
 * **Apache Kafka:** Real-time event streaming
-* **PostgreSQL:** Persistent storage for validated interactions
+* **PostgreSQL:** Persistent storage for reference and interaction data
 * **AWS EC2:** Continuous execution of the pipeline
 * **AWS RDS:** Managed PostgreSQL database hosting
-* **AWS S3:** Exhibition data files used to determine eligible exhibitions
+* **AWS S3:** Source exhibition and historical data
 * **Terraform:** Infrastructure provisioning
 * **Bash and SSH:** Deployment automation and remote server management
 * **Jupyter Notebook:** Exploratory data analysis and investigation of visitor interaction patterns
@@ -50,47 +45,73 @@ The pipeline follows a continuous ingestion and processing workflow.
 
 ## Data Validation and Business Rules
 
-The live stream may contain accidental interactions, malformed messages, mechanical errors, or events from unrelated kiosks. The pipeline applies validation rules before inserting records into the database.
+The live stream may contain accidental interactions, malformed messages, mechanical errors, or events for unknown exhibits. The consumer applies these rules before inserting records:
 
 | Validation             | Rule                                                                                  |
 | ---------------------- | ------------------------------------------------------------------------------------- |
 | Operating hours        | Accept interactions between 08:45 and 18:15, inclusive.                               |
-| Rating values          | Accept ratings from -1 to 4, inclusive.                                               |
-| Interaction type       | Accept only type values of 0 or 1.                                                    |
-| Exhibition eligibility | Process only exhibitions represented by the required data files in the AWS S3 bucket. |
-| Message structure      | Ignore messages with invalid or unexpected keys.                                      |
+| Values                 | Accept `val` values of -1 through 4.                                                   |
+| Interaction type       | If `type` is present, accept 0 or 1; `type` is required when `val` is -1.              |
+| Exhibition eligibility | Accept only `site` IDs present in the database's `exhibit` table.                     |
+| Message structure      | Require `at`, `site`, and `val` fields with valid types; extra fields are not rejected solely for being present. |
 
-These rules help maintain data quality and ensure that downstream analysis uses eligible visitor interactions.
-
-Timestamp validation should account for the museum's local timezone. The accepted operating window includes a 15-minute buffer before opening and after closing to accommodate the defined business rules.
+The timestamp's time component is compared directly with the operating window; the consumer does not convert timestamps between time zones. Supply timestamps in the museum's local time.
 
 ## Emergency Email Notifications
 
-The pipeline includes an emergency email notification mechanism that sends an email to security staff when an emergency event is detected.
+The emergency notifier treats an event with `val == -1` and `type == 1` as an emergency. It sends an email only when that event is within 60 minutes of the current time. SMTP and recipient settings must be configured in the environment.
 
-This extends the pipeline beyond data ingestion and storage by supporting a more responsive approach to visitor safety. The notification configuration and delivery depend on the email service and credentials supplied to the application.
+The notifier runs separately from the live data consumer. Use `scripts/start_emergency_notifier_on_ec2.sh` to start it on EC2.
 
 ## Repository Structure
 
 ```text
 .
-├── terraform/
+├── .github/
+│   └── skills/
+│       ├── clean-code-small-functions/
+│       └── simple-unit-test-small-function/
 ├── data_seeding_pipeline/
 ├── live_data_pipeline/
+├── scripts/
+├── terraform/
 ├── test_suite/
 ├── visualisations/
-├── scripts/
-│   └── *.sh
-├── github_deploy_key
-├── github_deploy_key.pub
+│   └── analysis.ipynb
+├── env_template
+├── requirements.txt
 └── README.md
 ```
 
-`terraform/` contains the infrastructure definitions and configuration variables. `data_seeding_pipeline/` contains the batch ETL and database seeding code, while `live_data_pipeline/` contains the long-running Kafka consumer and emergency notifier. Automated tests are in `test_suite/`, analysis materials are in `visualisations/`, and operational shell scripts are grouped in `scripts/`.
+`data_seeding_pipeline/` contains the batch ETL, database seeding code, schema, and temporary data handling. `live_data_pipeline/` contains the Kafka consumer and emergency notifier. `terraform/` contains AWS infrastructure definitions, `scripts/` contains deployment and operations commands, `test_suite/` contains automated tests, and `visualisations/` contains the analysis notebook. Project-specific AI development skills are stored in `.github/skills/`.
 
-Run the test suite from the repository root with `python -m pytest test_suite`.
+Install the Python dependencies and run the tests from the repository root:
 
-Terraform generates the root `.env` file and EC2 private key file as part of infrastructure provisioning. These generated files should not be committed to version control.
+```bash
+python -m pip install -r requirements.txt
+python -m pytest test_suite
+```
+
+Terraform generates a local `.env` file and an EC2 private key. Terraform variable values and state, `.env` files, and SSH deployment keys are local deployment materials; do not commit them. The deployment scripts expect locally configured deployment keys which are intentionally not included in this repository.
+
+## Batch ETL and Database Seeding
+
+From the repository root, run the historical/exhibition ETL pipeline with:
+
+```bash
+python -m data_seeding_pipeline.pipeline --help
+python -m data_seeding_pipeline.pipeline --etl --schema data_seeding_pipeline/schema.sql
+```
+
+The pipeline can also run individual extraction, transformation, or load phases; see `--help` for the available flags. It needs AWS S3 and database configuration in the environment.
+
+To create or rebuild the reference tables from the S3 exhibition data, run:
+
+```bash
+python -m data_seeding_pipeline.seed_database
+```
+
+**Warning:** Database seeding drops and recreates project tables. Back up any records that must be kept before running it. The live pipeline's `--reset_db` option invokes this rebuild as well.
 
 ## Deployment Guide
 
@@ -109,7 +130,7 @@ Configure valid AWS credentials with the permissions required to provision and m
 Before deployment, provide:
 
 * `terraform/terraform.tfvars`, containing all required Terraform variables
-* `github_deploy_key` and `github_deploy_key.pub` in the repository root
+* A dedicated GitHub deploy key pair configured locally for the deployment scripts; do not add the private key to Git
 * A valid GitHub repository URL
 * The required Kafka, database, and email notification configuration
 
@@ -123,7 +144,7 @@ From the repository root, run:
 cd terraform
 terraform init
 terraform apply
-cd ../..
+cd ..
 ```
 
 Review the Terraform plan before approving infrastructure changes.
@@ -151,7 +172,7 @@ bash scripts/initial_start_pipeline_on_ec2.sh
 
 This starts `live_data_pipeline.live_pipeline --reset_db` on EC2 using `nohup`.
 
-**Important:** The `--reset_db` option may clear existing database records, depending on the implementation. Use it only when a database reset is intended and existing data has been backed up or can safely be discarded.
+**Important:** `--reset_db` drops and rebuilds the project tables, so existing database records will be lost. Back up any records that must be retained before running this command.
 
 For subsequent starts, use `scripts/start_pipeline_on_ec2.sh` according to the script's implementation.
 
@@ -182,7 +203,7 @@ Confirm that:
 
 ## Jupyter Notebook Analysis
 
-Jupyter Notebooks provide a separate environment for analysing the data collected by the pipeline.
+The supplied Jupyter notebook provides a separate environment for analysing the data collected by the pipeline.
 
 Potential areas of investigation include:
 
@@ -195,7 +216,7 @@ Potential areas of investigation include:
 
 Analysis should use the cleaned records stored in PostgreSQL or an appropriate exported dataset. Where possible, notebooks should document their data sources, transformations, assumptions, and findings so that the analysis is reproducible.
 
-The notebooks are intended for exploratory analysis and investigation; they are separate from the long-running Kafka consumer responsible for processing live events.
+The notebook is intended for exploratory analysis and investigation; it is separate from the long-running Kafka consumer responsible for processing live events.
 
 ## Troubleshooting
 
@@ -245,6 +266,13 @@ The notebooks are intended for exploratory analysis and investigation; they are 
 
 ## Outcome
 
-The project delivers a cloud-hosted, real-time data engineering pipeline that ingests live kiosk events, filters invalid interactions, stores structured records in PostgreSQL, and sends emergency email notifications.
+The project combines batch preparation of exhibition and historical data with live processing of kiosk events, PostgreSQL storage, AWS infrastructure automation, emergency email notifications, and notebook-based analysis.
 
-By combining Kafka, Python, PostgreSQL, AWS infrastructure automation, and Jupyter Notebook analysis, the system provides a foundation for reliable data collection and evidence-based investigation of visitor satisfaction, exhibition performance, and operational safety.
+## AI Usage and Development Skills
+
+AI tools were used as development aids for this project. The project-specific skills I created in [`.github/skills/`](./.github/skills/) helped guide that work:
+
+* [Clean Code With Small Functions](./.github/skills/clean-code-small-functions/SKILL.md) describes a workflow for improving readability by extracting focused, testable functions.
+* [Simple Unit Test For Small Functions](./.github/skills/simple-unit-test-small-function/SKILL.md) describes how to add focused, deterministic tests using the repository's pytest conventions.
+
+These skills are development guidance for AI-assisted work; they are not runtime dependencies of the pipelines.
