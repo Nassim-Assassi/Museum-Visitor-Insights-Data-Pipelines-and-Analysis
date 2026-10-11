@@ -8,8 +8,6 @@ from email_sender import send_email, verify_smtp_vars
 from logging_config import get_logger, configure_logging
 from load import get_db_connection
 
-from time import sleep
-
 logger = get_logger(__name__)
 
 
